@@ -126,6 +126,7 @@
             position: absolute; inset: 0; z-index: 1;
             width: 100%; height: 100%;
             object-fit: cover;
+            object-position: center 35%; /* favour faces/upper-centre instead of dead centre */
             background: var(--burgundy); /* dark fallback if a frame hasn't painted yet */
             opacity: 0;
             transition: opacity 1.2s ease-in-out; /* cinematic crossfade */
@@ -134,6 +135,11 @@
             filter: saturate(0.95) contrast(0.95) brightness(1.03) sepia(0.10);
         }
         .hero-video.active { opacity: 1; }
+        /* On phones a tall hero forces a 16:9 clip to zoom in hard. A shorter hero
+           lets more of the frame show, so faces/scene aren't cropped so aggressively. */
+        @media (max-width: 600px) {
+            .hero-container { height: 70svh; }
+        }
 
         /* Warm wash + vignette, fading into the parchment page below */
         .hero-grade {
@@ -237,8 +243,26 @@
         /* ============================================================
            CATALOGUE CAROUSEL  (drag + wheel, scoped to its section)
            ============================================================ */
-        .catalogue { padding: clamp(50px,8vw,90px) 0 clamp(60px,9vw,110px); }
-        .catalogue-head { padding: 0 24px; margin-bottom: clamp(20px,4vw,40px); }
+        /* Deep Burgundy ground (approved brand dark surface) makes the photo
+           cards and their shadows pop against the parchment page around it. */
+        .catalogue {
+            padding: clamp(56px,9vw,100px) 0 clamp(70px,10vw,120px);
+            background:
+                radial-gradient(120% 80% at 50% 0%, #5e2020 0%, var(--burgundy) 45%, var(--espresso) 100%);
+            position: relative;
+        }
+        /* soft parchment feathering at top & bottom so the band blends into the page */
+        .catalogue::before,
+        .catalogue::after {
+            content: ""; position: absolute; left: 0; right: 0; height: 60px; pointer-events: none; z-index: 2;
+        }
+        .catalogue::before { top: 0;    background: linear-gradient(to bottom, var(--parchment), transparent); }
+        .catalogue::after  { bottom: 0; background: linear-gradient(to top,    var(--parchment), transparent); }
+        .catalogue-head { padding: 0 24px; margin-bottom: clamp(24px,4vw,46px); position: relative; z-index: 3; }
+        /* On the dark band, recolour the catalogue heading for contrast (ivory + sand) */
+        .catalogue-head .text-gold { color: var(--ivory); -webkit-text-fill-color: var(--ivory); }
+        .catalogue-head .eyebrow   { color: var(--sand) !important; }
+        .catalogue-head .subtext   { color: rgba(246,243,235,0.72) !important; }
 
         .carousel {
             position: relative; z-index: 1;
@@ -260,16 +284,17 @@
             width: var(--width);
             height: var(--height);
             margin: calc(var(--height) * -0.5) 0 0 calc(var(--width) * -0.5);
-            border-radius: 12px;
+            border-radius: 14px;
             top: 50%; left: 50%;
             user-select: none;
             transform-origin: 0% 100%;
-            box-shadow: 0 10px 50px 10px rgba(0,0,0,.55);
+            /* deeper, warmer shadow reads clearly on the dark ground */
+            box-shadow: 0 24px 60px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(220,195,170,0.12);
             background: #000;
             pointer-events: all;
             transform: translate(var(--x), var(--y)) rotate(var(--rot));
             transition: transform .8s cubic-bezier(0, 0.02, 0, 1);
-            border: 1px solid var(--line);
+            border: 1px solid rgba(220,195,170,0.18);
         }
         .carousel-box {
             position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%;
@@ -504,14 +529,10 @@
 
     <!-- ============ CATALOGUE CAROUSEL (drag + wheel) ============ -->
     <section class="catalogue relative" id="catalogue">
-        <div class="ambient" aria-hidden="true">
-            <div class="orb orb-3" style="top:6%; left:62%;"></div>
-        </div>
-
         <div class="text-center reveal catalogue-head">
-            <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-[var(--champagne)]">The Catalogue</span>
+            <span class="eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase">The Catalogue</span>
             <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Explore Our Services</h3>
-            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--muted)">Drag, scroll or tap a card to browse. Full catalogue coming soon.</p>
+            <p class="subtext text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed">Drag, scroll or tap a card to browse. Full catalogue coming soon.</p>
         </div>
 
         <!-- Carousel: placeholder cards. Swap titles/images for the real catalogue later. -->
