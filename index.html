@@ -7,7 +7,7 @@
 
     <!-- SEO -->
     <meta name="description" content="Muse by Anahita, a luxury women's salon and spa in Phase 6, DHA, Karachi. Bridal and non-bridal services. Book your appointment online. Open daily 12pm to 9pm.">
-    <meta name="theme-color" content="#F1E2D1">
+    <meta name="theme-color" content="#1a0a0d">
     <link rel="icon" type="image/jpeg" href="assets/favicon.jpg">
     <link rel="apple-touch-icon" href="assets/favicon.jpg">
     <meta property="og:title" content="Muse by Anahita | Luxury Salon, DHA Karachi">
@@ -32,25 +32,33 @@
            Sand #DCC3AA · Parchment #F1E2D1 · Ivory #F6F3EB · Espresso #2A1010
            ============================================================ */
         :root {
-            /* Official Muse palette in guideline roles */
-            --crimson:    #810B38;   /* Crimson Rose — primary CTAs, headline accents, logo on light */
-            --burgundy:   #541A1A;   /* Deep Burgundy — dark grounds, footer, hero copy */
-            --sage:       #869B7E;   /* Sage — editorial secondary accents */
-            --sand:       #DCC3AA;   /* warm dividers, muted fills */
-            --parchment:  #F1E2D1;   /* primary canvas / page background */
-            --ivory:      #F6F3EB;   /* brightest surface — cards, panels */
-            --espresso:   #2A1010;   /* body text on light grounds (near-black, warm) */
-            --muted:      #8a6f63;   /* muted warm captions on light */
-            --line:       rgba(84,26,26,0.16);  /* hairline = burgundy at low alpha */
-            --line-strong:rgba(84,26,26,0.28);
+            /* Official Muse palette */
+            --crimson:    #810B38;   /* Crimson Rose — CTAs, accents */
+            --burgundy:   #541A1A;   /* Deep Burgundy — dark grounds */
+            --sage:       #869B7E;   /* Sage — secondary accents */
+            --sand:       #DCC3AA;   /* warm accent / dividers */
+            --parchment:  #F1E2D1;   /* kept for occasional warm fills */
+            --ivory:      #F6F3EB;   /* primary text on dark */
+            --espresso:   #2A1010;   /* warm near-black */
+
+            /* Dark theme surface system (one cohesive mood) */
+            --bg:         #1a0a0d;   /* page ground — deepest espresso/burgundy */
+            --surface:    #251013;   /* raised cards/panels */
+            --surface-2:  #2f1417;   /* hover / nested surfaces */
+            --text:       #F6F3EB;   /* body text (ivory) */
+            --text-soft:  rgba(246,243,235,0.72); /* secondary text */
+            --muted:      rgba(220,195,170,0.6);  /* warm muted captions (sand) */
+            --line:       rgba(220,195,170,0.16); /* warm hairline (sand, low alpha) */
+            --line-strong:rgba(220,195,170,0.28);
+
             --hero-h:     88svh;
             --dock-h:     0px;
-            /* legacy aliases mapped to brand roles so older rules stay valid */
-            --ink:        #2A1010;
-            --ink-soft:   #541A1A;
+            /* legacy aliases */
+            --ink:        #1a0a0d;
+            --ink-soft:   #251013;
             --cream:      #F6F3EB;
-            --champagne:  #810B38;
-            --champagne-2:#541A1A;
+            --champagne:  #DCC3AA;
+            --champagne-2:#810B38;
             --rose:       #c9a4a0;
         }
 
@@ -58,8 +66,8 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: 'DM Sans', sans-serif;
-            background-color: var(--parchment);
-            color: var(--espresso);
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0; padding: 0;
             overflow-x: hidden; width: 100%;
             -webkit-font-smoothing: antialiased;
@@ -67,10 +75,11 @@
         .font-serif { font-family: 'Bodoni Moda', serif; }
         ::selection { background: var(--crimson); color: var(--ivory); }
 
-        /* Headline treatment: solid Crimson Rose per guidelines (CTAs/hero headlines) */
+        /* Headline treatment: warm ivory→sand→crimson sheen on dark */
         .text-gold {
-            color: var(--crimson);
-            -webkit-text-fill-color: var(--crimson);
+            background: linear-gradient(120deg, var(--ivory) 0%, var(--sand) 48%, var(--crimson) 86%, var(--ivory) 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
         }
         /* Logo stays prominent and legible over any video frame */
         .logo-mark {
@@ -78,6 +87,68 @@
             transition: transform .5s cubic-bezier(.16,.7,.3,1), opacity .5s ease;
         }
         .logo-mark:hover { transform: scale(1.03); }
+
+        /* Hero copy layout in plain CSS so the hero is correct even before/without
+           the Tailwind CDN (utility classes still apply on top when it loads). */
+        .hero-copy {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100%; width: 100%;
+            padding: 0 24px; text-align: center;
+        }
+
+        /* Hero logo: the crown of the centred hero lockup.
+           A soft radial scrim sits directly behind it so the thin white strokes
+           stay legible over any video frame (light or busy). */
+        .hero-logo-wrap {
+            position: relative;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: clamp(18px, 3vw, 30px);
+        }
+        .hero-logo-wrap::before {
+            content: ""; position: absolute;
+            left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: 150%; height: 165%;
+            background: radial-gradient(ellipse at center,
+                rgba(26,10,13,0.55) 0%,
+                rgba(26,10,13,0.34) 42%,
+                rgba(26,10,13,0) 72%);
+            z-index: -1; pointer-events: none;
+        }
+        .hero-logo {
+            position: relative;
+            width: clamp(132px, 30vw, 230px);
+            height: auto;
+            /* heavier shadow so the white mark reads even on a light frame */
+            filter:
+                drop-shadow(0 2px 16px rgba(0,0,0,0.75))
+                drop-shadow(0 0 28px rgba(0,0,0,0.55))
+                drop-shadow(0 0 1px rgba(0,0,0,0.6));
+        }
+
+        /* Compact top nav: fully invisible over the hero, fades in once scrolled past.
+           Background + blur live on .show only so nothing renders at the top initially. */
+        .site-nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            z-index: 50;
+            display: flex; justify-content: center;
+            padding: max(10px, env(safe-area-inset-top)) 16px 12px;
+            opacity: 0; visibility: hidden; transform: translateY(-12px);
+            pointer-events: none;
+            transition: opacity .5s ease, transform .5s cubic-bezier(.16,.7,.3,1), visibility .5s;
+        }
+        .site-nav.show {
+            opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+            background: linear-gradient(to bottom, rgba(26,10,13,0.86), rgba(26,10,13,0));
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .nav-logo {
+            width: 92px; height: auto;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+            transition: transform .4s ease;
+        }
+        .nav-logo:hover { transform: scale(1.04); }
 
         /* ============================================================
            PRELOADER — curtain reveal before the hero appears
@@ -112,33 +183,53 @@
            ============================================================ */
         .hero-container {
             position: relative; width: 100%; height: var(--hero-h);
-            /* Dark burgundy base so the hero reads dark even before/without the video,
-               keeping the white logo and copy legible. Fades into parchment at the bottom. */
+            /* Dark base so the hero reads dark even before/without the video.
+               Fades into the dark page ground at the bottom. */
             background:
-                linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 45%, var(--burgundy) 65%, var(--parchment) 100%);
+                linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 45%, #6e3030 72%, var(--parchment) 100%);
             overflow: hidden;
         }
         .hero-base {
             position: absolute; inset: 0; z-index: 0;
-            background: linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 50%, #3a1414 80%, var(--parchment) 100%);
+            background: linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 50%, #6e3030 80%, var(--parchment) 100%);
         }
         .hero-video {
             position: absolute; inset: 0; z-index: 1;
             width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center 35%; /* favour faces/upper-centre instead of dead centre */
+            object-position: center center;
+            /* The source clip has thin black letterbox bars baked in. A small scale
+               pushes them past the frame edge so they never show. */
+            transform: scale(1.06);
             background: var(--burgundy); /* dark fallback if a frame hasn't painted yet */
             opacity: 0;
             transition: opacity 1.2s ease-in-out; /* cinematic crossfade */
             will-change: opacity;
-            /* Warm-neutral grade per brand photography guidance: slightly raised blacks, gentle highlights */
+            /* Warm-neutral grade per brand photography guidance */
             filter: saturate(0.95) contrast(0.95) brightness(1.03) sepia(0.10);
         }
         .hero-video.active { opacity: 1; }
-        /* On phones a tall hero forces a 16:9 clip to zoom in hard. A shorter hero
-           lets more of the frame show, so faces/scene aren't cropped so aggressively. */
-        @media (max-width: 600px) {
-            .hero-container { height: 70svh; }
+
+        /* Responsive hero framing. Tune height + focal point + zoom per width so the
+           subject stays well-framed and the baked-in bars stay cropped, phone -> ultrawide. */
+        @media (min-width: 1024px) { .hero-container { height: 92svh; } .hero-video { object-position: center 40%; transform: scale(1.08); } }
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .hero-container { height: 80svh; }
+            .hero-video { object-position: center 45%; }
+        }
+        @media (max-width: 767px) {
+            .hero-container { height: 78svh; }
+            .hero-video { object-position: center 45%; transform: scale(1.12); }
+        }
+        @media (max-width: 480px) {
+            .hero-container { height: 82svh; }
+            .hero-video { object-position: center 48%; transform: scale(1.16); }
+        }
+        /* Landscape phones: keep the hero short so copy + logo still fit */
+        @media (max-height: 520px) and (orientation: landscape) {
+            .hero-container { height: 150svh; }
+            .hero-logo { width: clamp(96px, 16vw, 140px); }
+            .hero-logo-wrap { margin-bottom: 10px; }
         }
 
         /* Warm wash + vignette, fading into the parchment page below */
@@ -153,7 +244,7 @@
             position: absolute; inset: 0; z-index: 5;
             background:
                 radial-gradient(120% 80% at 50% 35%, transparent 30%, rgba(42,16,16,0.45) 100%),
-                linear-gradient(to bottom, rgba(42,16,16,0.30) 0%, rgba(42,16,16,0.05) 30%, rgba(84,26,26,0.55) 72%, var(--parchment) 100%);
+                linear-gradient(to bottom, rgba(42,16,16,0.30) 0%, rgba(42,16,16,0.05) 30%, rgba(110,48,48,0.55) 72%, var(--parchment) 100%);
         }
         .grain {
             position: absolute; inset: 0; z-index: 6; pointer-events: none;
@@ -167,31 +258,31 @@
         .ambient { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
         .orb {
             position: absolute; border-radius: 50%; filter: blur(80px);
-            will-change: transform; opacity: 0.35; mix-blend-mode: multiply;
+            will-change: transform; opacity: 0.4; mix-blend-mode: screen;
         }
         .orb-1 { width: 46vw; height: 46vw; top: -8%; left: -6%;
             background: radial-gradient(circle, var(--sand) 0%, transparent 65%);
-            animation: drift1 22s ease-in-out infinite alternate; }
+            opacity: 0.16; animation: drift1 22s ease-in-out infinite alternate; }
         .orb-2 { width: 38vw; height: 38vw; bottom: -10%; right: -8%;
             background: radial-gradient(circle, var(--sage) 0%, transparent 65%);
-            opacity: 0.28; animation: drift2 26s ease-in-out infinite alternate; }
+            opacity: 0.14; animation: drift2 26s ease-in-out infinite alternate; }
         .orb-3 { width: 30vw; height: 30vw; top: 40%; left: 55%;
             background: radial-gradient(circle, var(--crimson) 0%, transparent 70%);
-            opacity: 0.12; animation: drift3 30s ease-in-out infinite alternate; }
+            opacity: 0.3; animation: drift3 30s ease-in-out infinite alternate; }
         @keyframes drift1 { to { transform: translate3d(8vw, 6vh, 0) scale(1.15); } }
         @keyframes drift2 { to { transform: translate3d(-7vw, -5vh, 0) scale(1.1); } }
         @keyframes drift3 { to { transform: translate3d(-6vw, 4vh, 0) scale(0.9); } }
 
         .mote {
             position: absolute; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(220,195,170,0.9), rgba(134,155,126,0.15));
-            box-shadow: 0 0 12px rgba(220,195,170,0.4);
+            background: radial-gradient(circle at 30% 30%, rgba(246,243,235,0.9), rgba(220,195,170,0.2));
+            box-shadow: 0 0 12px rgba(220,195,170,0.5);
             will-change: transform, opacity; animation: rise linear infinite;
-            mix-blend-mode: multiply;
+            mix-blend-mode: screen;
         }
         @keyframes rise {
             0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 0.5; } 90% { opacity: 0.35; }
+            10% { opacity: 0.7; } 90% { opacity: 0.5; }
             100% { transform: translateY(-110vh) translateX(var(--sway, 20px)); opacity: 0; }
         }
         #mesh-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -201,23 +292,23 @@
            ============================================================ */
         .section-pad { padding: clamp(60px, 9vw, 130px) clamp(16px, 4vw, 40px); }
 
-        /* Ivory card surface on the parchment canvas (guideline: cards = Ivory) */
+        /* Raised dark surface for cards/panels */
         .glass {
-            background: var(--ivory);
+            background: var(--surface);
             border: 1px solid var(--line);
-            box-shadow: 0 30px 80px -40px rgba(84,26,26,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+            box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7), inset 0 1px 0 rgba(246,243,235,0.05);
         }
 
         .booking-shell {
             position: relative; z-index: 10; max-width: 920px; margin: 0 auto;
             border-radius: 28px; overflow: hidden;
-            background: var(--ivory);        /* Ivory card per guidelines */
+            background: var(--surface);
             border: 1px solid var(--line);
-            box-shadow: 0 30px 80px -40px rgba(84,26,26,0.35);
+            box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
         }
         .booking-shell::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--crimson), transparent); opacity: 0.85;
+            background: linear-gradient(90deg, transparent, var(--crimson), transparent); opacity: 0.9;
         }
         .booking-head { text-align: center; padding: clamp(28px,4vw,44px) 20px clamp(4px,1.2vw,10px); }
         /* The window is a fixed-height clipping frame. The iframe inside is taller and
@@ -229,7 +320,7 @@
             height: 600px;            /* desktop */
             overflow: hidden;
             border-radius: 0 0 28px 28px;
-            background: var(--ivory);  /* matches Calendly bg so any edge is invisible */
+            background: #1a0a0d;  /* matches Calendly dark bg so any edge is invisible */
         }
         .calendly-frame {
             display: block; border: 0;
@@ -243,26 +334,35 @@
         /* ============================================================
            CATALOGUE CAROUSEL  (drag + wheel, scoped to its section)
            ============================================================ */
-        /* Deep Burgundy ground (approved brand dark surface) makes the photo
-           cards and their shadows pop against the parchment page around it. */
+        /* Catalogue: heading sits on a light parchment top that flows smoothly
+           into the dark page ground where the cards are. */
         .catalogue {
             padding: clamp(56px,9vw,100px) 0 clamp(70px,10vw,120px);
             background:
-                radial-gradient(120% 80% at 50% 0%, #5e2020 0%, var(--burgundy) 45%, var(--espresso) 100%);
+                linear-gradient(to bottom,
+                    var(--parchment) 0%,
+                    var(--parchment) 16%,
+                    #b89a86 30%,      /* warm sand→burgundy blend midpoint */
+                    #6e3030 44%,
+                    var(--bg) 64%,
+                    var(--bg) 100%);
             position: relative;
         }
-        /* soft parchment feathering at top & bottom so the band blends into the page */
-        .catalogue::before,
-        .catalogue::after {
-            content: ""; position: absolute; left: 0; right: 0; height: 60px; pointer-events: none; z-index: 2;
-        }
-        .catalogue::before { top: 0;    background: linear-gradient(to bottom, var(--parchment), transparent); }
-        .catalogue::after  { bottom: 0; background: linear-gradient(to top,    var(--parchment), transparent); }
         .catalogue-head { padding: 0 24px; margin-bottom: clamp(24px,4vw,46px); position: relative; z-index: 3; }
-        /* On the dark band, recolour the catalogue heading for contrast (ivory + sand) */
-        .catalogue-head .text-gold { color: var(--ivory); -webkit-text-fill-color: var(--ivory); }
-        .catalogue-head .eyebrow   { color: var(--sand) !important; }
-        .catalogue-head .subtext   { color: rgba(246,243,235,0.72) !important; }
+        /* Heading is on the light parchment top → dark text, crimson accents */
+        .catalogue-head .text-gold {
+            background: none; -webkit-text-fill-color: var(--crimson); color: var(--crimson);
+        }
+        .catalogue-head .eyebrow   { color: var(--crimson) !important; opacity: 0.8; }
+        .catalogue-head .subtext   { color: var(--espresso) !important; opacity: 0.7; }
+        .soon-badge {
+            display: inline-block; margin-top: 18px;
+            padding: 7px 16px; border-radius: 999px;
+            font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--crimson);
+            background: rgba(129,11,56,0.06);
+            border: 1px solid rgba(129,11,56,0.28);
+        }
 
         .carousel {
             position: relative; z-index: 1;
@@ -333,6 +433,41 @@
         }
         .cursor2 { --size: 3px; background: var(--crimson); border: none; transition-duration: .7s; }
         @media (pointer: fine) { .cursor { display: block; } }
+
+        /* ============================================================
+           REVIEWS  — testimonial scaffold (wire to Google later)
+           ============================================================ */
+        .reviews-section {
+            padding: clamp(64px,10vw,120px) clamp(16px,4vw,40px) clamp(64px,10vw,120px);
+            background: var(--bg);
+            position: relative;
+        }
+        .reviews-head { margin-bottom: clamp(40px,6vw,68px); }
+        .reviews-grid {
+            max-width: 1080px; margin: 0 auto;
+            display: grid; gap: clamp(16px,2.5vw,26px);
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 760px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); } }
+        .review-card {
+            margin: 0; padding: clamp(24px,3vw,34px);
+            border-radius: 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            box-shadow: 0 24px 60px -32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(246,243,235,0.04);
+            display: flex; flex-direction: column; gap: 16px;
+            transition: transform .5s cubic-bezier(.16,.7,.3,1), border-color .5s ease;
+        }
+        .review-card:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+        .review-card .stars { color: var(--sand); letter-spacing: 0.18em; font-size: 14px; }
+        .review-card blockquote {
+            margin: 0; font-family: 'Bodoni Moda', serif; font-style: italic;
+            font-size: clamp(15px,1.6vw,18px); line-height: 1.55; color: var(--ivory);
+        }
+        .review-card figcaption {
+            font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--muted);
+        }
 
         /* ============================================================
            RECENT POSTS  — 3D spinning ring (responsive)
@@ -450,13 +585,14 @@
         .reveal.in { opacity: 1; transform: none; }
 
         .hero-copy > * { opacity: 0; transform: translateY(20px); }
-        .play .hero-eyebrow { animation: heroUp 1s ease forwards 0.3s; }
-        .play .hero-title   { animation: heroUp 1.2s ease forwards 0.5s; }
-        .play .hero-sub     { animation: heroUp 1.2s ease forwards 0.8s; }
-        .play .hero-rule    { animation: heroUp 1.2s ease forwards 1s; }
+        .play .hero-logo-wrap { animation: heroUp 1.1s ease forwards 0.15s; }
+        .play .hero-eyebrow { animation: heroUp 1s ease forwards 0.4s; }
+        .play .hero-title   { animation: heroUp 1.2s ease forwards 0.6s; }
+        .play .hero-sub     { animation: heroUp 1.2s ease forwards 0.9s; }
+        .play .hero-rule    { animation: heroUp 1.2s ease forwards 1.1s; }
         @keyframes heroUp { to { opacity: 1; transform: none; } }
 
-        .btn-ghost { position: relative; overflow: hidden; border-radius: 999px; color: var(--crimson); border: 1px solid var(--crimson); transition: color .5s ease, border-color .5s ease; }
+        .btn-ghost { position: relative; overflow: hidden; border-radius: 999px; color: var(--sand); border: 1px solid var(--line-strong); transition: color .5s ease, border-color .5s ease; }
         .btn-ghost::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--crimson); transform: translateY(101%); transition: transform .5s cubic-bezier(.16,.7,.3,1); }
         .btn-ghost:hover { color: var(--ivory); border-color: var(--crimson); }
         .btn-ghost:hover::after { transform: translateY(0); }
@@ -484,12 +620,11 @@
         <div class="pre-line"></div>
     </div>
 
-    <!-- ============ NAV ============ -->
-    <nav class="absolute top-0 w-full z-50 py-7 md:py-9 flex justify-center">
+    <!-- ============ NAV (compact, appears on scroll) ============ -->
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
         <a href="#top" class="inline-block" aria-label="Muse by Anahita home">
-            <!-- Brand logo (white version sits prominently above the dark video) -->
             <img src="assets/logo-white.png" alt="Muse by Anahita"
-                 class="logo-mark w-[150px] md:w-[210px] h-auto select-none" draggable="false">
+                 class="nav-logo select-none" draggable="false">
         </a>
     </nav>
     <span id="top"></span>
@@ -499,28 +634,38 @@
         <!-- Dark base sits behind the video so the hero is always dark (logo legible)
              even on slow connections or if a clip is still loading. -->
         <div class="hero-base" aria-hidden="true"></div>
-        <!-- Three stacked <video> layers; JS crossfades 1 -> 2 -> 3 -> 1 forever -->
-        <video class="hero-video" data-index="0" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+        <!-- HERO VIDEO.
+             Currently one looping clip (1.mp4). To add more later for a crossfade
+             sequence: drop 2.mp4 / 3.mp4 into /assets, uncomment the extra <video>
+             blocks below, and the script auto-detects them and sequences 1->2->3->1.
+             (When more than one clip is present, looping is turned off automatically.) -->
+        <video class="hero-video" data-index="0" muted playsinline preload="auto" loop disablepictureinpicture poster="assets/hero-poster.jpg" aria-hidden="true">
             <source src="assets/1.mp4" type="video/mp4">
         </video>
+        <!--
         <video class="hero-video" data-index="1" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
             <source src="assets/2.mp4" type="video/mp4">
         </video>
         <video class="hero-video" data-index="2" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
             <source src="assets/3.mp4" type="video/mp4">
         </video>
+        -->
 
         <div class="hero-grade"></div>
         <div class="video-overlay"></div>
         <div class="grain"></div>
 
-        <div class="hero-copy relative z-10 flex flex-col items-center justify-end h-full pb-20 md:pb-28 px-6 text-center">
-            <span class="hero-eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase mb-5" style="color:var(--sand);">Atelier of Beauty &middot; DHA Karachi</span>
+        <div class="hero-copy relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
+            <span class="hero-logo-wrap">
+                <img src="assets/logo-white.png" alt="Muse by Anahita"
+                     class="hero-logo logo-mark select-none" draggable="false">
+            </span>
+            <span class="hero-eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase mb-4" style="color:var(--sand);">Atelier of Beauty &middot; DHA Karachi</span>
             <h2 class="hero-title font-serif italic text-5xl md:text-7xl leading-[1.05] mb-5" style="color:var(--ivory); text-shadow:0 2px 30px rgba(42,16,16,0.5);">Redefine Your Beauty</h2>
             <p class="hero-sub text-[11px] md:text-sm tracking-[0.18em] md:tracking-[0.3em] uppercase max-w-[320px] md:max-w-xl leading-relaxed" style="color:rgba(246,243,235,0.9);">
                 Bridal and everyday luxury. Choose your service, date and time to reserve a session with our specialists.
             </p>
-            <a href="#book" class="hero-rule mt-9 inline-flex flex-col items-center gap-2" style="color:var(--sand);">
+            <a href="#book" class="hero-rule mt-8 inline-flex flex-col items-center gap-2" style="color:var(--sand);">
                 <span class="text-[9px] tracking-[0.35em] uppercase">Book below</span>
                 <span class="w-px h-10 bg-gradient-to-b from-[var(--sand)] to-transparent"></span>
             </a>
@@ -532,7 +677,8 @@
         <div class="text-center reveal catalogue-head">
             <span class="eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase">The Catalogue</span>
             <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Explore Our Services</h3>
-            <p class="subtext text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed">Drag, scroll or tap a card to browse. Full catalogue coming soon.</p>
+            <p class="subtext text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed">A preview of what we offer. The full service menu with pricing arrives soon, drag, scroll or tap a card to browse.</p>
+            <span class="soon-badge" aria-label="Preview">Preview &middot; Full menu coming soon</span>
         </div>
 
         <!-- Carousel: placeholder cards. Swap titles/images for the real catalogue later. -->
@@ -541,56 +687,56 @@
                 <div class="carousel-box">
                     <div class="title">Bridal</div>
                     <div class="num">01</div>
-                    <img alt="Bridal services" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Bridal services" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-1.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Hair</div>
                     <div class="num">02</div>
-                    <img alt="Hair services" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Hair services" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-2.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Makeup</div>
                     <div class="num">03</div>
-                    <img alt="Makeup services" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Makeup services" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-3.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Skincare</div>
                     <div class="num">04</div>
-                    <img alt="Skincare services" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Skincare services" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-4.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Nails</div>
                     <div class="num">05</div>
-                    <img alt="Nail services" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Nail services" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-5.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Spa</div>
                     <div class="num">06</div>
-                    <img alt="Spa services" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Spa services" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-6.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Henna</div>
                     <div class="num">07</div>
-                    <img alt="Henna services" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Henna services" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-7.jpg'" />
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="carousel-box">
                     <div class="title">Styling</div>
                     <div class="num">08</div>
-                    <img alt="Styling services" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=800&auto=format&fit=crop" />
+                    <img alt="Styling services" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-8.jpg'" />
                 </div>
             </div>
         </div>
@@ -609,7 +755,7 @@
             <div class="booking-head">
                 <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-[var(--champagne)]">Reservations</span>
                 <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Book Your Appointment</h3>
-                <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--muted)">Live availability. Confirm your visit in a few moments.</p>
+                <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Live availability. Confirm your visit in a few moments.</p>
             </div>
             <!-- Self-built iframe so it behaves identically whether opened locally or deployed.
                  It sits inside .calendly-window which is a fixed-height, overflow:hidden frame:
@@ -618,7 +764,7 @@
             <div class="calendly-window">
                 <iframe
                     class="calendly-frame"
-                    src="https://calendly.com/musemarketing333/muse-by-anahita?hide_event_type_details=1&hide_gdpr_banner=1&background_color=F6F3EB&text_color=2A1010&primary_color=810B38"
+                    src="https://calendly.com/musemarketing333/muse-by-anahita?hide_event_type_details=1&hide_gdpr_banner=1&background_color=1a0a0d&text_color=F6F3EB&primary_color=DCC3AA"
                     title="Book your appointment"
                     frameborder="0"
                     scrolling="no"
@@ -627,25 +773,57 @@
         </div>
     </section>
 
+    <!-- ============ REVIEWS (scaffold — wire up to Google reviews later) ============ -->
+    <section class="reviews-section relative" id="reviews">
+        <div class="text-center reveal reviews-head">
+            <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase" style="color:var(--sand);">Kind Words</span>
+            <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">What Our Clients Say</h3>
+            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Verified Google reviews will appear here. A glimpse of the experience in the meantime.</p>
+        </div>
+
+        <div class="reviews-grid reveal">
+            <!-- Placeholder testimonials. Replace with live Google reviews when connected. -->
+            <figure class="review-card">
+                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote>Booked my bridal trial here and the team made me feel like the only client in the room. Flawless work.</blockquote>
+                <figcaption>Bridal client &middot; DHA</figcaption>
+            </figure>
+            <figure class="review-card">
+                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote>The calmest, most elegant salon experience in Karachi. The attention to detail is unmatched.</blockquote>
+                <figcaption>Returning client</figcaption>
+            </figure>
+            <figure class="review-card">
+                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote>Easy to book, on time, and the results speak for themselves. My go-to before every event.</blockquote>
+                <figcaption>Party &amp; events</figcaption>
+            </figure>
+        </div>
+
+        <div class="text-center" style="margin-top: clamp(32px,5vw,52px);">
+            <span class="soon-badge" style="color:var(--sand); background:rgba(220,195,170,0.08); border-color:rgba(220,195,170,0.28);">Live Google reviews coming soon</span>
+        </div>
+    </section>
+
     <!-- ============ RECENT POSTS — 3D spinning carousel ============ -->
     <section class="posts-section relative" id="posts">
         <div class="text-center reveal posts-head">
             <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-[var(--champagne)]">@musebyanahita</span>
             <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Recent Work</h3>
-            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--muted)">Hover to pause. A glimpse of our latest looks.</p>
+            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Hover to pause. A glimpse of our latest looks.</p>
         </div>
 
         <!-- 3D ring. Swap the 8 image srcs for the latest post thumbnails. -->
         <div id="ring-stage" aria-hidden="true">
             <div id="ring">
-                <div class="ring-img"><img alt="Recent post 1" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 2" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 3" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 4" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 5" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 6" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 7" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=600&auto=format&fit=crop"></div>
-                <div class="ring-img"><img alt="Recent post 8" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=600&auto=format&fit=crop"></div>
+                <div class="ring-img"><img alt="Recent post 1" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-5.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 2" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-6.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 3" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-7.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 4" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-8.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 5" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-1.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 6" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-2.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 7" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-3.jpg'"></div>
+                <div class="ring-img"><img alt="Recent post 8" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-4.jpg'"></div>
             </div>
         </div>
 
@@ -658,10 +836,10 @@
     </section>
 
     <!-- ============ FOOTER ============ -->
-    <footer class="relative py-14 md:py-20 px-6 text-center" style="background:var(--burgundy);">
+    <footer class="relative py-14 md:py-20 px-6 text-center" style="background: radial-gradient(120% 100% at 50% 100%, rgba(129,11,56,0.18) 0%, transparent 60%), var(--bg); border-top: 1px solid var(--line);">
         <div class="max-w-3xl mx-auto reveal">
             <img src="assets/logo-white.png" alt="Muse by Anahita" class="mx-auto w-[120px] md:w-[150px] h-auto opacity-90 mb-8" draggable="false">
-            <div class="text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em]" style="color:var(--sand);">&copy; 2025 Muse by Anahita. All Rights Reserved.</div>
+            <div class="text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em]" style="color:var(--sand);">&copy; 2026 Muse by Anahita. All Rights Reserved.</div>
         </div>
     </footer>
 
@@ -720,7 +898,19 @@
         const vids = Array.from(document.querySelectorAll('.hero-video'));
         if (!vids.length) return;
 
-        // Make sure none of the clips loop on their own — the sequence handles repetition.
+        // SINGLE CLIP: just loop it smoothly, no sequencing/crossfade-to-black.
+        if (vids.length === 1) {
+            const v = vids[0];
+            v.loop = true; v.muted = true;
+            v.classList.add('active');
+            const p = v.play(); if (p && p.catch) p.catch(() => {});
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) { const pp = v.play(); if (pp && pp.catch) pp.catch(()=>{}); }
+            });
+            return;
+        }
+
+        // MULTIPLE CLIPS: crossfade 1 -> 2 -> 3 -> 1 forever.
         vids.forEach(v => { v.loop = false; v.muted = true; v.load(); });
 
         let current = -1;
@@ -735,7 +925,6 @@
             try { v.currentTime = 0; } catch(e){}
             const p = v.play(); if (p && p.catch) p.catch(() => {});
             show(i);
-            // Pause the outgoing clip after the crossfade so it doesn't keep running underneath
             if (prev !== -1 && prev !== i) {
                 const pv = vids[prev];
                 setTimeout(() => { try { pv.pause(); } catch(e){} }, 1300);
@@ -745,12 +934,10 @@
 
         function next(){ goTo((current + 1) % vids.length); }
 
-        // Safety net: if 'ended' never fires (stall, tab throttling, codec hiccup),
-        // advance based on the clip's own duration so the loop never gets stuck.
         function armWatchdog(){
             clearTimeout(watchdog);
             const v = vids[current];
-            const dur = (v && isFinite(v.duration) && v.duration > 0) ? v.duration : 12; // fallback 12s
+            const dur = (v && isFinite(v.duration) && v.duration > 0) ? v.duration : 12;
             watchdog = setTimeout(() => { next(); }, (dur + 1) * 1000);
         }
 
@@ -759,7 +946,6 @@
             v.addEventListener('error', () => { clearTimeout(watchdog); next(); });
         });
 
-        // If the tab is backgrounded then refocused, make sure the current clip resumes
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && current !== -1) {
                 const v = vids[current];
@@ -777,6 +963,19 @@
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* Compact top nav appears once you scroll past most of the hero */
+    (function scrollNav(){
+        const nav = document.getElementById('siteNav');
+        if (!nav) return;
+        function update(){
+            const trigger = window.innerHeight * 0.7;
+            nav.classList.toggle('show', window.scrollY > trigger);
+        }
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+    })();
 
     /* ============================================================
        4. FLOATING LIGHT MOTES
