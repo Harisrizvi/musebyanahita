@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Muse by Anahita</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/InertiaPlugin.min.js"></script>
+    <script type="module" crossorigin src="/musebyanahita/assets/index-32kaEL2y.js"></script>
+    <link rel="stylesheet" crossorigin href="/musebyanahita/assets/index-DcLXezIx.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+    (function() {
+      if (typeof gsap === 'undefined') {
+        console.error('GSAP not loaded');
+        return;
+      }
+
+      if (typeof Draggable !== 'undefined') {
+        if (typeof InertiaPlugin !== 'undefined') {
+          gsap.registerPlugin(Draggable, InertiaPlugin);
+        } else {
+          gsap.registerPlugin(Draggable);
+        }
+      }
+
+      let initialized = false;
+      let cleanupFn = null;
+
+      function tryInit() {
+        const carouselItemsEl = document.querySelector('.carousel-items');
+        const carouselContainerEl = document.querySelector('.carousel-container');
+
+        if (!carouselItemsEl || !carouselContainerEl) {
+          if (initialized) {
+            if (cleanupFn) cleanupFn();
+            cleanupFn = null;
+            initialized = false;
+          }
+          return;
+        }
+
+        if (initialized) return;
+        initialized = true;
+
+        const resetBtn = document.getElementById('resetBtn');
+        const circleBtn = document.getElementById('circleBtn');
+        const waveBtn = document.getElementById('waveBtn');
+        const staggerBtn = document.getElementById('staggerBtn');
+        const gridBtn = document.getElementById('gridBtn');
+        const fanBtn = document.getElementById('fanBtn');
+        const depthBtn = document.getElementById('depthBtn');
+        const allButtons = document.querySelectorAll('.switch-button');
+
+        const CONFIG = {
+          totalCards: 12,
+          wheelRadius: 35,
+          images: [
+            'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=800',
+            'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=800',
+            'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800',
+            'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800',
+            'https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800',
+            'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800',
+            'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800',
+            'https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=800',
+            'https://images.unsplash.com/photo-1519415943484-9fa1873496d4?q=80&w=800',
+            'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=800',
+            'https://images.unsplash.com/photo-1516727003284-a96541e51e9c?q=80&w=800',
+            'https://images.unsplash.com/photo-1548918901-9b31223c5c3a?q=80&w=800'
+          ],
+          animations: { transitionDuration: 1.2 }
+        };
+
+        let currentAnimation = 'circle';
+        let isTransitioning = false;
+        let activeAnimations = [];
+        let draggableInstance = null;
+        let originalZIndices = [];
+
+        gsap.set('.switch', { opacity: 0, visibility: 'hidden' });
+
+        function updateMenuState(a) {
+          allButtons.forEach(b => b.classList.remove('switch-button-current'));
+          const map = { circle:circleBtn, wave:waveBtn, stagger:staggerBtn, grid:gridBtn, fan:fanBtn, depth:depthBtn };
+          if (map[a]) map[a].classList.add('switch-button-current');
+        }
+
+        function generateCards() {
+          carouselItemsEl.innerHTML = '';
+          CONFIG.images.forEach((src, i) => {
+            const el = document.createElement('div');
+            el.className = 'carousel-item';
+            el.style.cssText = `
+              position: absolute;
+              width: 320px;
+              height: 460px;
+              border-radius: 8px;
+              overflow: hidden;
+              transform: translate(-50%, -50%);
+              transform-origin: center center;
+              user-select: none;
+              cursor: pointer;
+              background-size: cover;
+              background-position: center;
+              background-image: url(${src});
+              box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            `;
+            el.innerHTML = `<div style="position:absolute;top:10px;left:12px;font-size:13px;color:rgba(246,243,235,0.8);font-weight:600;font-family:'DM Sans',sans-serif;text-shadow:0 1px 3px rgba(0,0,0,0.8);">${String(i+1).padStart(3,'0')}</div>`;
+            carouselItemsEl.appendChild(el);
+          });
+          const cards = gsap.utils.toArray('.carousel-item');
+          originalZIndices = cards.map((card, i) => {
+            const z = 100 + (CONFIG.totalCards - i);
+            gsap.set(card, { zIndex: z });
+            return z;
+          });
+        }
+
+        function killActive() {
+          gsap.killTweensOf('.carousel-items');
+          gsap.killTweensOf('.carousel-item');
+          activeAnimations.forEach(a => a && a.kill && a.kill());
+          activeAnimations = [];
+        }
+
+        function getVP() { return { width: window.innerWidth, height: window.innerHeight }; }
+
+        function circlePos(animated) {
+          const cards = gsap.utils.toArray('.carousel-item');
+          const r = Math.min(window.innerWidth, window.innerHeight) * (CONFIG.wheelRadius / 100);
+          const step = (2 * Math.PI) / CONFIG.totalCards;
+          const curRot = gsap.getProperty('.carousel-items', 'rotation') || 0;
+          const curRotRad = curRot * (Math.PI / 180);
+          const tl = gsap.timeline();
+          cards.forEach((card, i) => {
+            const angle = i * step + curRotRad;
+            const x = r * Math.cos(angle), y = r * Math.sin(angle);
+            if (animated) tl.to(card, { x, y, rotation: -curRot, scale: 0.8, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0);
+            else gsap.set(card, { x, y, rotation: -curRot, scale: 0.8 });
+          });
+          return tl;
+        }
+
+        function setupDraggable() {
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselItemsEl.classList.add('draggable');
+          draggableInstance = Draggable.create('.carousel-items', {
+            type: 'rotation', inertia: typeof InertiaPlugin !== 'undefined', throwResistance: 0.3,
+            onDrag: updateRots, onThrowUpdate: updateRots
+          })[0];
+        }
+
+        function updateRots() {
+          if (isTransitioning) return;
+          const wr = this.rotation || 0;
+          const cards = gsap.utils.toArray('.carousel-item');
+          if (currentAnimation === 'circle') cards.forEach(c => gsap.set(c, { rotation: -wr }));
+          else if (currentAnimation === 'fan') {
+            const vp = getVP(), maxA = Math.min(180, vp.width / 5);
+            cards.forEach((c, i) => { const p = i / (CONFIG.totalCards - 1); gsap.set(c, { rotation: (-maxA / 2) + p * maxA - wr }); });
+          }
+        }
+
+        function wavePos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const cw = 320;
+          const spacing = Math.min(vp.width * 0.8, CONFIG.totalCards * cw * 0.4) / (CONFIG.totalCards - 1);
+          const wh = Math.min(vp.height * 0.1, 80), tl = gsap.timeline();
+          cards.forEach((c, i) => tl.to(c, { x: (i - (CONFIG.totalCards - 1) / 2) * spacing, y: Math.sin((i / (CONFIG.totalCards - 1)) * Math.PI * 2) * wh, rotation: 0, scale: 0.7, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0));
+          return tl;
+        }
+
+        function startWave() {
+          const cards = gsap.utils.toArray('.carousel-item'), wh = Math.min(window.innerHeight * 0.1, 80);
+          return gsap.to(cards, { y: i => Math.sin((i / (CONFIG.totalCards - 1)) * Math.PI * 2 + Math.PI) * wh, duration: 1.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+        }
+
+        function staggerPos() {
+          const cards = gsap.utils.toArray('.carousel-item');
+          const cw = 320, ch = 460, cols = 4, rows = 3, xs = cw * 0.7, ys = ch * 0.7;
+          const tl = gsap.timeline();
+          cards.forEach((c, i) => { const row = Math.floor(i / cols), col = i % cols, xo = row % 2 === 1 ? xs / 2 : 0; tl.to(c, { x: (col - (cols - 1) / 2) * xs + xo, y: (row - (rows - 1) / 2) * ys, rotation: 0, scale: 0.7, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function staggerMouse() {
+          const vp = getVP(), cols = 4, xs = 320 * 0.7, ys = 460 * 0.7;
+          carouselContainerEl.onmousemove = e => {
+            if (currentAnimation !== 'stagger' || isTransitioning) return;
+            const off = (e.clientY / vp.height - 0.5) * -40;
+            gsap.utils.toArray('.carousel-item').forEach((c, i) => { const row = Math.floor(i / cols); gsap.to(c, { y: (row - 1) * ys + off, duration: 0.8, ease: 'power2.out' }); });
+          };
+        }
+
+        function gridPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const cw = 320, ch = 460, ratio = vp.width / vp.height;
+          const rows = ratio > 1 ? 3 : 4, cols = ratio > 1 ? 4 : 3;
+          const scale = Math.min(0.8, vp.width / (cols * cw * 1.2), vp.height / (rows * ch * 1.2));
+          const xs = cw * scale * 1.2, ys = ch * scale * 1.2, tl = gsap.timeline();
+          cards.forEach((c, i) => { const col = i % cols, row = Math.floor(i / cols); tl.to(c, { x: (col - (cols - 1) / 2) * xs, y: (row - (rows - 1) / 2) * ys, rotation: 0, scale, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function fanPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), maxA = Math.min(180, window.innerWidth / 5), tl = gsap.timeline();
+          cards.forEach((c, i) => { const p = i / (CONFIG.totalCards - 1); tl.to(c, { x: 0, y: Math.sin((p - 0.5) * Math.PI) * 50, rotation: (-maxA / 2) + p * maxA, scale: 0.8, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function depthPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const pos = [
+            {x:-vp.width*0.25,y:-vp.height*0.2,z:-200,scale:0.9,rotX:-5,rotY:5},
+            {x:vp.width*0.25,y:-vp.height*0.25,z:-300,scale:0.85,rotX:-3,rotY:-4},
+            {x:-vp.width*0.3,y:vp.height*0.2,z:-400,scale:0.8,rotX:4,rotY:6},
+            {x:vp.width*0.3,y:vp.height*0.25,z:-500,scale:0.75,rotX:5,rotY:-5},
+            {x:0,y:-vp.height*0.3,z:-700,scale:0.7,rotX:-6,rotY:0},
+            {x:-vp.width*0.35,y:0,z:-800,scale:0.65,rotX:0,rotY:7},
+            {x:vp.width*0.35,y:0,z:-900,scale:0.6,rotX:0,rotY:-7},
+            {x:0,y:vp.height*0.3,z:-1000,scale:0.55,rotX:6,rotY:0},
+            {x:-vp.width*0.2,y:-vp.height*0.15,z:-1200,scale:0.5,rotX:-3,rotY:3},
+            {x:vp.width*0.2,y:-vp.height*0.15,z:-1300,scale:0.45,rotX:-3,rotY:-3},
+            {x:-vp.width*0.2,y:vp.height*0.15,z:-1400,scale:0.4,rotX:3,rotY:3},
+            {x:vp.width*0.2,y:vp.height*0.15,z:-1500,scale:0.35,rotX:3,rotY:-3}
+          ];
+          const tl = gsap.timeline();
+          cards.forEach((c, i) => { if (i >= pos.length) return; const p = pos[i]; gsap.set(c, { zIndex: 1000 - Math.round(Math.abs(p.z)) }); tl.to(c, { x:p.x, y:p.y, z:p.z, rotationX:p.rotX, rotationY:p.rotY, scale:p.scale, duration:CONFIG.animations.transitionDuration, ease:'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function depthMouse() {
+          const vp = getVP();
+          carouselContainerEl.onmousemove = e => {
+            if (currentAnimation !== 'depth' || isTransitioning) return;
+            gsap.to('.carousel-items', { rotationY: (e.clientX / vp.width - 0.5) * 3, rotationX: -(e.clientY / vp.height - 0.5) * 3, duration: 1.2, ease: 'power1.out' });
+          };
+        }
+
+        function transitionTo(newPattern) {
+          if (isTransitioning) return;
+          isTransitioning = true;
+          updateMenuState(newPattern);
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselItemsEl.classList.remove('draggable');
+          carouselContainerEl.onmousemove = null;
+          const prev = currentAnimation;
+          currentAnimation = newPattern;
+          const tl = gsap.timeline({ onComplete: () => {
+            isTransitioning = false;
+            if (newPattern === 'circle' || newPattern === 'fan') setupDraggable();
+            else if (newPattern === 'wave') { const w = startWave(); activeAnimations.push(w); }
+            else if (newPattern === 'stagger') staggerMouse();
+            else if (newPattern === 'depth') depthMouse();
+          }});
+          activeAnimations.push(tl);
+          if (prev === 'fan') {
+            const nl = gsap.timeline();
+            gsap.utils.toArray('.carousel-item').forEach(c => nl.to(c, { rotation:0, rotationX:0, rotationY:0, duration:CONFIG.animations.transitionDuration/2, ease:'power2.inOut' }, 0));
+            tl.add(nl); tl.to({}, { duration:0.1 });
+          }
+          if (newPattern !== 'circle' && newPattern !== 'fan') {
+            if (prev === 'circle' || prev === 'fan') tl.set('.carousel-items', { rotationX:0, rotationY:0 });
+            else tl.set('.carousel-items', { rotation:0, rotationX:0, rotationY:0 });
+          }
+          const ptlMap = { circle: () => circlePos(true), wave: wavePos, stagger: staggerPos, grid: gridPos, fan: fanPos, depth: depthPos };
+          const ptl = ptlMap[newPattern]();
+          if (ptl) tl.add(ptl, 0);
+          if ((prev === 'circle' || prev === 'fan') && newPattern !== 'circle' && newPattern !== 'fan') {
+            tl.to('.carousel-items', { rotation:0, duration:CONFIG.animations.transitionDuration, ease:'power2.inOut' }, 0);
+          }
+        }
+
+        function initCarousel() {
+          const cards = gsap.utils.toArray('.carousel-item');
+          gsap.set(cards, { x:0, y:0, rotation:0, scale:0, opacity:0 });
+          gsap.set('.switch', { opacity:0, visibility:'hidden' });
+          const tl = gsap.timeline({ onComplete: () => {
+            isTransitioning = false;
+            setupDraggable();
+            gsap.to('.switch', { opacity:1, visibility:'visible', duration:0.8, ease:'power2.inOut' });
+          }});
+          cards.forEach((card, i) => {
+            gsap.set(card, { zIndex: 100 + (cards.length - 1 - i) });
+            tl.to(card, { opacity:1, scale:0.8, duration:0.5, ease:'power2.out' }, (cards.length - 1 - i) * 0.1);
+          });
+          tl.to({}, { duration:0.3 });
+          tl.add(circlePos(true));
+          currentAnimation = 'circle';
+          activeAnimations.push(tl);
+          updateMenuState('circle');
+        }
+
+        generateCards();
+        initCarousel();
+
+        const onResetClick = () => {
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselContainerEl.onmousemove = null;
+          gsap.set('.carousel-items', { rotation:0, rotationX:0, rotationY:0 });
+          gsap.to('.switch', { opacity:0, visibility:'hidden', duration:0.3, ease:'power2.inOut', onComplete: () => { generateCards(); initCarousel(); }});
+          currentAnimation = 'circle'; isTransitioning = false; updateMenuState('circle');
+        };
+        const onCircleClick = () => transitionTo('circle');
+        const onWaveClick = () => transitionTo('wave');
+        const onStaggerClick = () => transitionTo('stagger');
+        const onGridClick = () => transitionTo('grid');
+        const onFanClick = () => transitionTo('fan');
+        const onDepthClick = () => transitionTo('depth');
+        const onResize = () => { if (!isTransitioning) transitionTo(currentAnimation); };
+
+        if (resetBtn) resetBtn.addEventListener('click', onResetClick);
+        if (circleBtn) circleBtn.addEventListener('click', onCircleClick);
+        if (waveBtn) waveBtn.addEventListener('click', onWaveClick);
+        if (staggerBtn) staggerBtn.addEventListener('click', onStaggerClick);
+        if (gridBtn) gridBtn.addEventListener('click', onGridClick);
+        if (fanBtn) fanBtn.addEventListener('click', onFanClick);
+        if (depthBtn) depthBtn.addEventListener('click', onDepthClick);
+        window.addEventListener('resize', onResize);
+
+        cleanupFn = () => {
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselContainerEl.onmousemove = null;
+          window.removeEventListener('resize', onResize);
+          if (resetBtn) resetBtn.removeEventListener('click', onResetClick);
+          if (circleBtn) circleBtn.removeEventListener('click', onCircleClick);
+          if (waveBtn) waveBtn.removeEventListener('click', onWaveClick);
+          if (staggerBtn) staggerBtn.removeEventListener('click', onStaggerClick);
+          if (gridBtn) gridBtn.removeEventListener('click', onGridClick);
+          if (fanBtn) fanBtn.removeEventListener('click', onFanClick);
+          if (depthBtn) depthBtn.removeEventListener('click', onDepthClick);
+        };
+      }
+
+      setInterval(tryInit, 100);
+    })();
+    </script>
+  </body>
+</html>
+
