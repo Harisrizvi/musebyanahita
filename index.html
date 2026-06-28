@@ -1,1149 +1,347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Muse by Anahita | Luxury Salon &amp; Spa, DHA Karachi</title>
-
-    <!-- SEO -->
-    <meta name="description" content="Muse by Anahita, a luxury women's salon and spa in Phase 6, DHA, Karachi. Bridal and non-bridal services. Book your appointment online. Open daily 12pm to 9pm.">
-    <meta name="theme-color" content="#1a0a0d">
-    <link rel="icon" type="image/jpeg" href="assets/favicon.jpg">
-    <link rel="apple-touch-icon" href="assets/favicon.jpg">
-    <meta property="og:title" content="Muse by Anahita | Luxury Salon, DHA Karachi">
-    <meta property="og:description" content="Reserve your session with our specialists at Muse by Anahita, Karachi.">
-    <meta property="og:type" content="website">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
-    <!-- Preload first clip so the hero never shows a black/loading flash -->
-    <link rel="preload" as="video" href="assets/1.mp4" type="video/mp4">
-
-    <style>
-        /* ============================================================
-           BRAND TOKENS  — swap to match the logo when ready
-           ============================================================ */
-        /* ============================================================
-           BRAND TOKENS  — official Muse by Anahita palette
-           Crimson Rose #810B38 · Deep Burgundy #541A1A · Sage #869B7E
-           Sand #DCC3AA · Parchment #F1E2D1 · Ivory #F6F3EB · Espresso #2A1010
-           ============================================================ */
-        :root {
-            /* Official Muse palette */
-            --crimson:    #810B38;   /* Crimson Rose — CTAs, accents */
-            --burgundy:   #541A1A;   /* Deep Burgundy — dark grounds */
-            --sage:       #869B7E;   /* Sage — secondary accents */
-            --sand:       #DCC3AA;   /* warm accent / dividers */
-            --parchment:  #F1E2D1;   /* kept for occasional warm fills */
-            --ivory:      #F6F3EB;   /* primary text on dark */
-            --espresso:   #2A1010;   /* warm near-black */
-
-            /* Dark theme surface system (one cohesive mood) */
-            --bg:         #1a0a0d;   /* page ground — deepest espresso/burgundy */
-            --surface:    #251013;   /* raised cards/panels */
-            --surface-2:  #2f1417;   /* hover / nested surfaces */
-            --text:       #F6F3EB;   /* body text (ivory) */
-            --text-soft:  rgba(246,243,235,0.72); /* secondary text */
-            --muted:      rgba(220,195,170,0.6);  /* warm muted captions (sand) */
-            --line:       rgba(220,195,170,0.16); /* warm hairline (sand, low alpha) */
-            --line-strong:rgba(220,195,170,0.28);
-
-            --hero-h:     88svh;
-            --dock-h:     0px;
-            /* legacy aliases */
-            --ink:        #1a0a0d;
-            --ink-soft:   #251013;
-            --cream:      #F6F3EB;
-            --champagne:  #DCC3AA;
-            --champagne-2:#810B38;
-            --rose:       #c9a4a0;
-        }
-
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 0;
-            overflow-x: hidden; width: 100%;
-            -webkit-font-smoothing: antialiased;
-        }
-        .font-serif { font-family: 'Bodoni Moda', serif; }
-        ::selection { background: var(--crimson); color: var(--ivory); }
-
-        /* Headline treatment: warm ivory→sand→crimson sheen on dark */
-        .text-gold {
-            background: linear-gradient(120deg, var(--ivory) 0%, var(--sand) 48%, var(--crimson) 86%, var(--ivory) 100%);
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; color: transparent;
-        }
-        /* Logo stays prominent and legible over any video frame */
-        .logo-mark {
-            filter: drop-shadow(0 2px 18px rgba(0,0,0,0.55)) drop-shadow(0 0 1px rgba(0,0,0,0.4));
-            transition: transform .5s cubic-bezier(.16,.7,.3,1), opacity .5s ease;
-        }
-        .logo-mark:hover { transform: scale(1.03); }
-
-        /* Hero copy layout in plain CSS so the hero is correct even before/without
-           the Tailwind CDN (utility classes still apply on top when it loads). */
-        .hero-copy {
-            position: relative; z-index: 10;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            height: 100%; width: 100%;
-            padding: 0 24px; text-align: center;
-        }
-
-        /* Hero logo: the crown of the centred hero lockup.
-           A soft radial scrim sits directly behind it so the thin white strokes
-           stay legible over any video frame (light or busy). */
-        .hero-logo-wrap {
-            position: relative;
-            display: inline-flex; align-items: center; justify-content: center;
-            margin-bottom: clamp(18px, 3vw, 30px);
-        }
-        .hero-logo-wrap::before {
-            content: ""; position: absolute;
-            left: 50%; top: 50%; transform: translate(-50%, -50%);
-            width: 150%; height: 165%;
-            background: radial-gradient(ellipse at center,
-                rgba(26,10,13,0.55) 0%,
-                rgba(26,10,13,0.34) 42%,
-                rgba(26,10,13,0) 72%);
-            z-index: -1; pointer-events: none;
-        }
-        .hero-logo {
-            position: relative;
-            width: clamp(132px, 30vw, 230px);
-            height: auto;
-            /* heavier shadow so the white mark reads even on a light frame */
-            filter:
-                drop-shadow(0 2px 16px rgba(0,0,0,0.75))
-                drop-shadow(0 0 28px rgba(0,0,0,0.55))
-                drop-shadow(0 0 1px rgba(0,0,0,0.6));
-        }
-
-        /* Compact top nav: fully invisible over the hero, fades in once scrolled past.
-           Background + blur live on .show only so nothing renders at the top initially. */
-        .site-nav {
-            position: fixed; top: 0; left: 0; width: 100%;
-            z-index: 50;
-            display: flex; justify-content: center;
-            padding: max(10px, env(safe-area-inset-top)) 16px 12px;
-            opacity: 0; visibility: hidden; transform: translateY(-12px);
-            pointer-events: none;
-            transition: opacity .5s ease, transform .5s cubic-bezier(.16,.7,.3,1), visibility .5s;
-        }
-        .site-nav.show {
-            opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
-            background: linear-gradient(to bottom, rgba(26,10,13,0.86), rgba(26,10,13,0));
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        }
-        .nav-logo {
-            width: 92px; height: auto;
-            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
-            transition: transform .4s ease;
-        }
-        .nav-logo:hover { transform: scale(1.04); }
-
-        /* ============================================================
-           PRELOADER — curtain reveal before the hero appears
-           ============================================================ */
-        #preloader {
-            position: fixed; inset: 0; z-index: 300;
-            background: var(--burgundy);
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
-            transition: opacity 0.9s ease, visibility 0.9s ease;
-        }
-        #preloader.hidden { opacity: 0; visibility: hidden; }
-        .pre-mark {
-            font-family: 'Bodoni Moda', serif;
-            color: var(--ivory);
-            font-size: clamp(2.2rem, 8vw, 4rem);
-            letter-spacing: 0.35em; text-indent: 0.35em; font-style: italic;
-            opacity: 0; transform: translateY(12px);
-            animation: preIn 1.1s ease forwards 0.15s;
-        }
-        .pre-line {
-            margin-top: 1.4rem; width: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--sand), transparent);
-            animation: preLine 1.8s ease forwards 0.5s;
-        }
-        @keyframes preIn { to { opacity: 1; transform: translateY(0); } }
-        @keyframes preLine { to { width: min(220px, 50vw); } }
-
-        /* ============================================================
-           CINEMATIC VIDEO HERO — three local clips, crossfaded
-           A dark cinematic hero reads well above a light editorial page,
-           like a magazine cover. Bottom fades into the parchment canvas.
-           ============================================================ */
-        .hero-container {
-            position: relative; width: 100%; height: var(--hero-h);
-            /* Dark base so the hero reads dark even before/without the video.
-               Fades into the dark page ground at the bottom. */
-            background:
-                linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 45%, #6e3030 72%, var(--parchment) 100%);
-            overflow: hidden;
-        }
-        .hero-base {
-            position: absolute; inset: 0; z-index: 0;
-            background: linear-gradient(to bottom, var(--espresso) 0%, var(--burgundy) 50%, #6e3030 80%, var(--parchment) 100%);
-        }
-        .hero-video {
-            position: absolute; inset: 0; z-index: 1;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            /* The source clip has thin black letterbox bars baked in. A small scale
-               pushes them past the frame edge so they never show. */
-            transform: scale(1.06);
-            background: var(--burgundy); /* dark fallback if a frame hasn't painted yet */
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out; /* cinematic crossfade */
-            will-change: opacity;
-            /* Warm-neutral grade per brand photography guidance */
-            filter: saturate(0.95) contrast(0.95) brightness(1.03) sepia(0.10);
-        }
-        .hero-video.active { opacity: 1; }
-
-        /* Responsive hero framing. Tune height + focal point + zoom per width so the
-           subject stays well-framed and the baked-in bars stay cropped, phone -> ultrawide. */
-        @media (min-width: 1024px) { .hero-container { height: 92svh; } .hero-video { object-position: center 40%; transform: scale(1.08); } }
-        @media (max-width: 1023px) and (min-width: 768px) {
-            .hero-container { height: 80svh; }
-            .hero-video { object-position: center 45%; }
-        }
-        @media (max-width: 767px) {
-            .hero-container { height: 78svh; }
-            .hero-video { object-position: center 45%; transform: scale(1.12); }
-        }
-        @media (max-width: 480px) {
-            .hero-container { height: 82svh; }
-            .hero-video { object-position: center 48%; transform: scale(1.16); }
-        }
-        /* Landscape phones: keep the hero short so copy + logo still fit */
-        @media (max-height: 520px) and (orientation: landscape) {
-            .hero-container { height: 150svh; }
-            .hero-logo { width: clamp(96px, 16vw, 140px); }
-            .hero-logo-wrap { margin-bottom: 10px; }
-        }
-
-        /* Warm wash + vignette, fading into the parchment page below */
-        .hero-grade {
-            position: absolute; inset: 0; z-index: 4; pointer-events: none;
-            background:
-                radial-gradient(120% 80% at 50% 30%, rgba(220,195,170,0.12) 0%, transparent 55%),
-                linear-gradient(0deg, rgba(84,26,26,0.12), rgba(84,26,26,0.04));
-            mix-blend-mode: soft-light;
-        }
-        .video-overlay {
-            position: absolute; inset: 0; z-index: 5;
-            background:
-                radial-gradient(120% 80% at 50% 35%, transparent 30%, rgba(42,16,16,0.45) 100%),
-                linear-gradient(to bottom, rgba(42,16,16,0.30) 0%, rgba(42,16,16,0.05) 30%, rgba(110,48,48,0.55) 72%, var(--parchment) 100%);
-        }
-        .grain {
-            position: absolute; inset: 0; z-index: 6; pointer-events: none;
-            opacity: 0.04; mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        /* ============================================================
-           AMBIENT BACKGROUND SYSTEM — soft warm blooms on the parchment
-           ============================================================ */
-        .ambient { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(80px);
-            will-change: transform; opacity: 0.4; mix-blend-mode: screen;
-        }
-        .orb-1 { width: 46vw; height: 46vw; top: -8%; left: -6%;
-            background: radial-gradient(circle, var(--sand) 0%, transparent 65%);
-            opacity: 0.16; animation: drift1 22s ease-in-out infinite alternate; }
-        .orb-2 { width: 38vw; height: 38vw; bottom: -10%; right: -8%;
-            background: radial-gradient(circle, var(--sage) 0%, transparent 65%);
-            opacity: 0.14; animation: drift2 26s ease-in-out infinite alternate; }
-        .orb-3 { width: 30vw; height: 30vw; top: 40%; left: 55%;
-            background: radial-gradient(circle, var(--crimson) 0%, transparent 70%);
-            opacity: 0.3; animation: drift3 30s ease-in-out infinite alternate; }
-        @keyframes drift1 { to { transform: translate3d(8vw, 6vh, 0) scale(1.15); } }
-        @keyframes drift2 { to { transform: translate3d(-7vw, -5vh, 0) scale(1.1); } }
-        @keyframes drift3 { to { transform: translate3d(-6vw, 4vh, 0) scale(0.9); } }
-
-        .mote {
-            position: absolute; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(246,243,235,0.9), rgba(220,195,170,0.2));
-            box-shadow: 0 0 12px rgba(220,195,170,0.5);
-            will-change: transform, opacity; animation: rise linear infinite;
-            mix-blend-mode: screen;
-        }
-        @keyframes rise {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 0.7; } 90% { opacity: 0.5; }
-            100% { transform: translateY(-110vh) translateX(var(--sway, 20px)); opacity: 0; }
-        }
-        #mesh-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
-
-        /* ============================================================
-           SECTIONS / CARDS
-           ============================================================ */
-        .section-pad { padding: clamp(60px, 9vw, 130px) clamp(16px, 4vw, 40px); }
-
-        /* Raised dark surface for cards/panels */
-        .glass {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7), inset 0 1px 0 rgba(246,243,235,0.05);
-        }
-
-        .booking-shell {
-            position: relative; z-index: 10; max-width: 920px; margin: 0 auto;
-            border-radius: 28px; overflow: hidden;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
-        }
-        .booking-shell::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--crimson), transparent); opacity: 0.9;
-        }
-        .booking-head { text-align: center; padding: clamp(28px,4vw,44px) 20px clamp(4px,1.2vw,10px); }
-        /* The window is a fixed-height clipping frame. The iframe inside is taller and
-           gets cropped, so: (1) no scrollbar is ever possible, (2) the calendar fills the
-           frame with no empty space below it. Heights are tuned to the date-picker view. */
-        .calendly-window {
-            position: relative; width: 100%;
-            min-width: 280px;
-            height: 600px;            /* desktop */
-            overflow: hidden;
-            border-radius: 0 0 28px 28px;
-            background: #1a0a0d;  /* matches Calendly dark bg so any edge is invisible */
-        }
-        .calendly-frame {
-            display: block; border: 0;
-            width: 100%;
-            height: 760px;             /* taller than the window; excess is clipped away */
-            margin-top: -4px;          /* nudge to hide the 1px top seam */
-        }
-        @media (max-width: 767px) { .calendly-window { height: 580px; } .calendly-frame { height: 740px; } }
-        @media (max-width: 420px) { .calendly-window { height: 600px; } .calendly-frame { height: 780px; } }
-
-        /* ============================================================
-           CATALOGUE CAROUSEL  (drag + wheel, scoped to its section)
-           ============================================================ */
-        /* Catalogue: heading sits on a light parchment top that flows smoothly
-           into the dark page ground where the cards are. */
-        .catalogue {
-            padding: clamp(56px,9vw,100px) 0 clamp(70px,10vw,120px);
-            background:
-                linear-gradient(to bottom,
-                    var(--parchment) 0%,
-                    var(--parchment) 16%,
-                    #b89a86 30%,      /* warm sand→burgundy blend midpoint */
-                    #6e3030 44%,
-                    var(--bg) 64%,
-                    var(--bg) 100%);
-            position: relative;
-        }
-        .catalogue-head { padding: 0 24px; margin-bottom: clamp(24px,4vw,46px); position: relative; z-index: 3; }
-        /* Heading is on the light parchment top → dark text, crimson accents */
-        .catalogue-head .text-gold {
-            background: none; -webkit-text-fill-color: var(--crimson); color: var(--crimson);
-        }
-        .catalogue-head .eyebrow   { color: var(--crimson) !important; opacity: 0.8; }
-        .catalogue-head .subtext   { color: var(--espresso) !important; opacity: 0.7; }
-        .soon-badge {
-            display: inline-block; margin-top: 18px;
-            padding: 7px 16px; border-radius: 999px;
-            font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
-            color: var(--crimson);
-            background: rgba(129,11,56,0.06);
-            border: 1px solid rgba(129,11,56,0.28);
-        }
-
-        .carousel {
-            position: relative; z-index: 1;
-            height: clamp(420px, 60vh, 560px);
-            overflow: hidden;
-            pointer-events: none; /* only the cards capture pointer events */
-        }
-        .carousel-item {
-            --items: 8;
-            --width: clamp(140px, 26vw, 280px);
-            --height: clamp(200px, 38vw, 380px);
-            --x: calc(var(--active) * 800%);
-            --y: calc(var(--active) * 200%);
-            --rot: calc(var(--active) * 120deg);
-            --opacity: calc(var(--zIndex) / var(--items) * 3 - 2);
-            overflow: hidden;
-            position: absolute;
-            z-index: var(--zIndex);
-            width: var(--width);
-            height: var(--height);
-            margin: calc(var(--height) * -0.5) 0 0 calc(var(--width) * -0.5);
-            border-radius: 14px;
-            top: 50%; left: 50%;
-            user-select: none;
-            transform-origin: 0% 100%;
-            /* deeper, warmer shadow reads clearly on the dark ground */
-            box-shadow: 0 24px 60px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(220,195,170,0.12);
-            background: #000;
-            pointer-events: all;
-            transform: translate(var(--x), var(--y)) rotate(var(--rot));
-            transition: transform .8s cubic-bezier(0, 0.02, 0, 1);
-            border: 1px solid rgba(220,195,170,0.18);
-        }
-        .carousel-box {
-            position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%;
-            transition: opacity .8s cubic-bezier(0, 0.02, 0, 1);
-            opacity: var(--opacity);
-            font-family: 'Bodoni Moda', serif;
-        }
-        .carousel-box:before {
-            content: ''; position: absolute; z-index: 1; inset: 0;
-            background: linear-gradient(to bottom, rgba(42,16,16,.35), rgba(42,16,16,0) 30%, rgba(42,16,16,0) 50%, rgba(42,16,16,.7));
-        }
-        .carousel-item .title {
-            position: absolute; z-index: 1; color: var(--ivory);
-            bottom: 18px; left: 18px;
-            transition: opacity .8s cubic-bezier(0, 0.02, 0, 1);
-            font-size: clamp(20px, 3vw, 32px); font-style: italic;
-            text-shadow: 0 4px 10px rgba(0,0,0,.4);
-        }
-        .carousel-item .num {
-            position: absolute; z-index: 1; color: var(--sand);
-            top: 8px; left: 18px;
-            transition: opacity .8s cubic-bezier(0, 0.02, 0, 1);
-            font-size: clamp(22px, 9vw, 72px);
-            opacity: .9;
-        }
-        .carousel-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        /* Brand cursor follower for the carousel (fine pointers only) */
-        .cursor {
-            position: fixed; z-index: 110; top: 0; left: 0;
-            --size: 40px; width: var(--size); height: var(--size);
-            border-radius: 50%; border: 1px solid rgba(129,11,56,.45);
-            margin: calc(var(--size) * -0.5) 0 0 calc(var(--size) * -0.5);
-            transition: transform .85s cubic-bezier(0, 0.02, 0, 1);
-            display: none; pointer-events: none;
-        }
-        .cursor2 { --size: 3px; background: var(--crimson); border: none; transition-duration: .7s; }
-        @media (pointer: fine) { .cursor { display: block; } }
-
-        /* ============================================================
-           REVIEWS  — testimonial scaffold (wire to Google later)
-           ============================================================ */
-        .reviews-section {
-            padding: clamp(64px,10vw,120px) clamp(16px,4vw,40px) clamp(64px,10vw,120px);
-            background: var(--bg);
-            position: relative;
-        }
-        .reviews-head { margin-bottom: clamp(40px,6vw,68px); }
-        .reviews-grid {
-            max-width: 1080px; margin: 0 auto;
-            display: grid; gap: clamp(16px,2.5vw,26px);
-            grid-template-columns: 1fr;
-        }
-        @media (min-width: 760px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); } }
-        .review-card {
-            margin: 0; padding: clamp(24px,3vw,34px);
-            border-radius: 20px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            box-shadow: 0 24px 60px -32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(246,243,235,0.04);
-            display: flex; flex-direction: column; gap: 16px;
-            transition: transform .5s cubic-bezier(.16,.7,.3,1), border-color .5s ease;
-        }
-        .review-card:hover { transform: translateY(-4px); border-color: var(--line-strong); }
-        .review-card .stars { color: var(--sand); letter-spacing: 0.18em; font-size: 14px; }
-        .review-card blockquote {
-            margin: 0; font-family: 'Bodoni Moda', serif; font-style: italic;
-            font-size: clamp(15px,1.6vw,18px); line-height: 1.55; color: var(--ivory);
-        }
-        .review-card figcaption {
-            font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        /* ============================================================
-           RECENT POSTS  — 3D spinning ring (responsive)
-           radius scales with viewport so it fits phone -> ultrawide
-           ============================================================ */
-        .posts-section { padding: clamp(50px,8vw,90px) 16px clamp(50px,8vw,90px); overflow: hidden; }
-        .posts-head { margin-bottom: clamp(50px,9vw,110px); position: relative; z-index: 5; }
-
-        #ring-stage {
-            /* Tiles are sized smaller than the stage so the spinning ring has clear
-               vertical space and never overlaps the heading or the button. */
-            --tile-w: clamp(150px, 22vw, 280px);
-            --tile-h: clamp(200px, 30vw, 360px);
-            --radius: calc(var(--tile-w) * 1.4); /* spacing for 8 panels at 45deg */
-            position: relative;
-            width: 100%;
-            /* Stage taller than the tile so the perspective spread stays contained */
-            height: calc(var(--tile-h) + 60px);
-            margin: 0 auto;
-            perspective: 1500px;
-            perspective-origin: 50% 50%;
-        }
-        #ring {
-            position: absolute; left: 50%; top: 50%;
-            width: var(--tile-w); height: var(--tile-h);
-            margin: calc(var(--tile-h) * -0.5) 0 0 calc(var(--tile-w) * -0.5);
-            transform-style: preserve-3d;
-            animation: ringSpin 28s infinite linear;
-            will-change: transform;
-        }
-        #ring-stage:hover #ring { animation-play-state: paused; }
-        @keyframes ringSpin {
-            from { transform: rotateY(0deg); }
-            to   { transform: rotateY(-360deg); }
-        }
-        .ring-img {
-            position: absolute; width: var(--tile-w); height: var(--tile-h);
-            border-radius: 16px; overflow: hidden;
-            background: #000; border: 1px solid var(--line);
-            box-shadow: 0 20px 60px -20px rgba(0,0,0,.8);
-            backface-visibility: hidden;
-        }
-        .ring-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ring-img::after { /* subtle warm glaze for cohesion */
-            content: ""; position: absolute; inset: 0;
-            background: linear-gradient(160deg, rgba(220,195,170,0.08), transparent 50%);
-        }
-        /* 8 panels, 45deg apart, pushed out by --radius */
-        .ring-img:nth-child(1) { transform: rotateY(0deg)   translateZ(var(--radius)); }
-        .ring-img:nth-child(2) { transform: rotateY(45deg)  translateZ(var(--radius)); }
-        .ring-img:nth-child(3) { transform: rotateY(90deg)  translateZ(var(--radius)); }
-        .ring-img:nth-child(4) { transform: rotateY(135deg) translateZ(var(--radius)); }
-        .ring-img:nth-child(5) { transform: rotateY(180deg) translateZ(var(--radius)); }
-        .ring-img:nth-child(6) { transform: rotateY(225deg) translateZ(var(--radius)); }
-        .ring-img:nth-child(7) { transform: rotateY(270deg) translateZ(var(--radius)); }
-        .ring-img:nth-child(8) { transform: rotateY(315deg) translateZ(var(--radius)); }
-        @media (prefers-reduced-motion: reduce) { #ring { animation: none; } }
-
-        /* ============================================================
-           FLOATING CONTACT DOCK
-           ============================================================ */
-        .dock {
-            position: fixed; z-index: 120;
-            left: 50%; transform: translateX(-50%);
-            bottom: max(18px, env(safe-area-inset-bottom));
-            display: flex; align-items: center; gap: 6px;
-            padding: 8px;
-            border-radius: 999px;
-            background: rgba(84,26,26,0.92);        /* Deep Burgundy glass */
-            border: 1px solid rgba(220,195,170,0.25);
-            backdrop-filter: blur(16px) saturate(140%);
-            -webkit-backdrop-filter: blur(16px) saturate(140%);
-            box-shadow: 0 20px 50px -20px rgba(84,26,26,0.6), inset 0 1px 0 rgba(246,243,235,0.12);
-            opacity: 0; translate: 0 24px;
-            transition: opacity .8s ease, translate .8s cubic-bezier(.16,.7,.3,1);
-            max-width: calc(100vw - 24px);
-        }
-        .dock.show { opacity: 1; translate: 0 0; }
-        .dock-btn {
-            position: relative;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            height: 46px; padding: 0 16px; border-radius: 999px;
-            color: var(--ivory); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-            white-space: nowrap; transition: background .4s ease, color .4s ease, transform .3s ease;
-        }
-        .dock-btn svg { width: 17px; height: 17px; flex: none; }
-        .dock-btn .label { display: none; }
-        @media (min-width: 560px) { .dock-btn .label { display: inline; } }
-        .dock-btn:hover { transform: translateY(-2px); }
-        .dock-primary { background: var(--crimson); color: var(--ivory); font-weight: 500; }
-        .dock-primary:hover { filter: brightness(1.08); }
-        .dock-ghost:hover { background: rgba(246,243,235,0.12); }
-        .dock-sep { width: 1px; height: 26px; background: rgba(220,195,170,0.25); flex: none; }
-
-        /* Call popover */
-        .call-wrap { position: relative; }
-        .call-menu {
-            position: absolute; bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(8px);
-            min-width: 230px; padding: 8px; border-radius: 18px;
-            background: var(--burgundy);
-            border: 1px solid rgba(220,195,170,0.25);
-            box-shadow: 0 24px 60px -20px rgba(42,16,16,0.7);
-            opacity: 0; visibility: hidden; transition: opacity .35s ease, transform .35s ease, visibility .35s;
-        }
-        .call-menu.open { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .call-item { display: flex; flex-direction: column; padding: 11px 14px; border-radius: 12px; text-align: left; transition: background .3s ease; }
-        .call-item:hover { background: rgba(246,243,235,0.1); }
-        .call-item .k { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sand); }
-        .call-item .v { font-size: 14px; color: var(--ivory); margin-top: 2px; }
-
-        /* ============================================================
-           REVEAL / INTERACTIONS
-           ============================================================ */
-        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s cubic-bezier(.16,.7,.3,1), transform 1s cubic-bezier(.16,.7,.3,1); }
-        .reveal.in { opacity: 1; transform: none; }
-
-        .hero-copy > * { opacity: 0; transform: translateY(20px); }
-        .play .hero-logo-wrap { animation: heroUp 1.1s ease forwards 0.15s; }
-        .play .hero-eyebrow { animation: heroUp 1s ease forwards 0.4s; }
-        .play .hero-title   { animation: heroUp 1.2s ease forwards 0.6s; }
-        .play .hero-sub     { animation: heroUp 1.2s ease forwards 0.9s; }
-        .play .hero-rule    { animation: heroUp 1.2s ease forwards 1.1s; }
-        @keyframes heroUp { to { opacity: 1; transform: none; } }
-
-        .btn-ghost { position: relative; overflow: hidden; border-radius: 999px; color: var(--sand); border: 1px solid var(--line-strong); transition: color .5s ease, border-color .5s ease; }
-        .btn-ghost::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--crimson); transform: translateY(101%); transition: transform .5s cubic-bezier(.16,.7,.3,1); }
-        .btn-ghost:hover { color: var(--ivory); border-color: var(--crimson); }
-        .btn-ghost:hover::after { transform: translateY(0); }
-
-        .link-underline { position: relative; }
-        .link-underline::after { content: ""; position: absolute; left: 0; bottom: -3px; height: 1px; width: 100%; background: var(--crimson); transform: scaleX(0); transform-origin: right; transition: transform .45s ease; }
-        .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
-
-        .mobile-tracking { letter-spacing: 0.18em; }
-        @media (min-width: 768px) { .mobile-tracking { letter-spacing: 0.45em; } }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation: none !important; transition: none !important; }
-            .reveal, .hero-copy > *, .dock { opacity: 1; transform: none; translate: 0; }
-            .hero-video.active { opacity: 1; }
-        }
-        :focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; }
-    </style>
-</head>
-<body>
-
-    <!-- ============ PRELOADER ============ -->
-    <div id="preloader" role="status" aria-label="Loading">
-        <div class="pre-mark font-serif">Muse</div>
-        <div class="pre-line"></div>
-    </div>
-
-    <!-- ============ NAV (compact, appears on scroll) ============ -->
-    <nav class="site-nav" id="siteNav" aria-label="Primary">
-        <a href="#top" class="inline-block" aria-label="Muse by Anahita home">
-            <img src="assets/logo-white.png" alt="Muse by Anahita"
-                 class="nav-logo select-none" draggable="false">
-        </a>
-    </nav>
-    <span id="top"></span>
-
-    <!-- ============ CINEMATIC VIDEO HERO (local clips) ============ -->
-    <section class="hero-container" id="hero">
-        <!-- Dark base sits behind the video so the hero is always dark (logo legible)
-             even on slow connections or if a clip is still loading. -->
-        <div class="hero-base" aria-hidden="true"></div>
-        <!-- HERO VIDEO.
-             Currently one looping clip (1.mp4). To add more later for a crossfade
-             sequence: drop 2.mp4 / 3.mp4 into /assets, uncomment the extra <video>
-             blocks below, and the script auto-detects them and sequences 1->2->3->1.
-             (When more than one clip is present, looping is turned off automatically.) -->
-        <video class="hero-video" data-index="0" muted playsinline preload="auto" loop disablepictureinpicture poster="assets/hero-poster.jpg" aria-hidden="true">
-            <source src="assets/1.mp4" type="video/mp4">
-        </video>
-        <!--
-        <video class="hero-video" data-index="1" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
-            <source src="assets/2.mp4" type="video/mp4">
-        </video>
-        <video class="hero-video" data-index="2" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
-            <source src="assets/3.mp4" type="video/mp4">
-        </video>
-        -->
-
-        <div class="hero-grade"></div>
-        <div class="video-overlay"></div>
-        <div class="grain"></div>
-
-        <div class="hero-copy relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
-            <span class="hero-logo-wrap">
-                <img src="assets/logo-white.png" alt="Muse by Anahita"
-                     class="hero-logo logo-mark select-none" draggable="false">
-            </span>
-            <span class="hero-eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase mb-4" style="color:var(--sand);">Atelier of Beauty &middot; DHA Karachi</span>
-            <h2 class="hero-title font-serif italic text-5xl md:text-7xl leading-[1.05] mb-5" style="color:var(--ivory); text-shadow:0 2px 30px rgba(42,16,16,0.5);">Redefine Your Beauty</h2>
-            <p class="hero-sub text-[11px] md:text-sm tracking-[0.18em] md:tracking-[0.3em] uppercase max-w-[320px] md:max-w-xl leading-relaxed" style="color:rgba(246,243,235,0.9);">
-                Bridal and everyday luxury. Choose your service, date and time to reserve a session with our specialists.
-            </p>
-            <a href="#book" class="hero-rule mt-8 inline-flex flex-col items-center gap-2" style="color:var(--sand);">
-                <span class="text-[9px] tracking-[0.35em] uppercase">Book below</span>
-                <span class="w-px h-10 bg-gradient-to-b from-[var(--sand)] to-transparent"></span>
-            </a>
-        </div>
-    </section>
-
-    <!-- ============ CATALOGUE CAROUSEL (drag + wheel) ============ -->
-    <section class="catalogue relative" id="catalogue">
-        <div class="text-center reveal catalogue-head">
-            <span class="eyebrow text-[10px] md:text-xs tracking-[0.4em] uppercase">The Catalogue</span>
-            <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Explore Our Services</h3>
-            <p class="subtext text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed">A preview of what we offer. The full service menu with pricing arrives soon, drag, scroll or tap a card to browse.</p>
-            <span class="soon-badge" aria-label="Preview">Preview &middot; Full menu coming soon</span>
-        </div>
-
-        <!-- Carousel: placeholder cards. Swap titles/images for the real catalogue later. -->
-        <div class="carousel" id="carousel">
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Bridal</div>
-                    <div class="num">01</div>
-                    <img alt="Bridal services" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-1.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Hair</div>
-                    <div class="num">02</div>
-                    <img alt="Hair services" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-2.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Makeup</div>
-                    <div class="num">03</div>
-                    <img alt="Makeup services" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-3.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Skincare</div>
-                    <div class="num">04</div>
-                    <img alt="Skincare services" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-4.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Nails</div>
-                    <div class="num">05</div>
-                    <img alt="Nail services" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-5.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Spa</div>
-                    <div class="num">06</div>
-                    <img alt="Spa services" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-6.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Henna</div>
-                    <div class="num">07</div>
-                    <img alt="Henna services" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-7.jpg'" />
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="carousel-box">
-                    <div class="title">Styling</div>
-                    <div class="num">08</div>
-                    <img alt="Styling services" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=800&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-8.jpg'" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ BOOKING SECTION ============ -->
-    <section class="section-pad relative" id="book" style="padding-top:0;">
-        <div class="ambient" aria-hidden="true">
-            <canvas id="mesh-canvas"></canvas>
-            <div class="orb orb-1"></div>
-            <div class="orb orb-2"></div>
-            <div id="moteField"></div>
-        </div>
-
-        <div class="booking-shell reveal">
-            <div class="booking-head">
-                <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-[var(--champagne)]">Reservations</span>
-                <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Book Your Appointment</h3>
-                <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Live availability. Confirm your visit in a few moments.</p>
-            </div>
-            <!-- Self-built iframe so it behaves identically whether opened locally or deployed.
-                 It sits inside .calendly-window which is a fixed-height, overflow:hidden frame:
-                 the iframe is taller than the window and gets clipped, so a scrollbar is
-                 physically impossible and no empty/grey space can show below the calendar. -->
-            <div class="calendly-window">
-                <iframe
-                    class="calendly-frame"
-                    src="https://calendly.com/musemarketing333/muse-by-anahita?hide_event_type_details=1&hide_gdpr_banner=1&background_color=1a0a0d&text_color=F6F3EB&primary_color=DCC3AA"
-                    title="Book your appointment"
-                    frameborder="0"
-                    scrolling="no"
-                    loading="lazy"></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ REVIEWS (scaffold — wire up to Google reviews later) ============ -->
-    <section class="reviews-section relative" id="reviews">
-        <div class="text-center reveal reviews-head">
-            <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase" style="color:var(--sand);">Kind Words</span>
-            <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">What Our Clients Say</h3>
-            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Verified Google reviews will appear here. A glimpse of the experience in the meantime.</p>
-        </div>
-
-        <div class="reviews-grid reveal">
-            <!-- Placeholder testimonials. Replace with live Google reviews when connected. -->
-            <figure class="review-card">
-                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <blockquote>Booked my bridal trial here and the team made me feel like the only client in the room. Flawless work.</blockquote>
-                <figcaption>Bridal client &middot; DHA</figcaption>
-            </figure>
-            <figure class="review-card">
-                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <blockquote>The calmest, most elegant salon experience in Karachi. The attention to detail is unmatched.</blockquote>
-                <figcaption>Returning client</figcaption>
-            </figure>
-            <figure class="review-card">
-                <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <blockquote>Easy to book, on time, and the results speak for themselves. My go-to before every event.</blockquote>
-                <figcaption>Party &amp; events</figcaption>
-            </figure>
-        </div>
-
-        <div class="text-center" style="margin-top: clamp(32px,5vw,52px);">
-            <span class="soon-badge" style="color:var(--sand); background:rgba(220,195,170,0.08); border-color:rgba(220,195,170,0.28);">Live Google reviews coming soon</span>
-        </div>
-    </section>
-
-    <!-- ============ RECENT POSTS — 3D spinning carousel ============ -->
-    <section class="posts-section relative" id="posts">
-        <div class="text-center reveal posts-head">
-            <span class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-[var(--champagne)]">@musebyanahita</span>
-            <h3 class="font-serif text-3xl md:text-5xl mt-3 text-gold">Recent Work</h3>
-            <p class="text-xs md:text-sm mt-4 max-w-md mx-auto leading-relaxed" style="color:var(--text-soft)">Hover to pause. A glimpse of our latest looks.</p>
-        </div>
-
-        <!-- 3D ring. Swap the 8 image srcs for the latest post thumbnails. -->
-        <div id="ring-stage" aria-hidden="true">
-            <div id="ring">
-                <div class="ring-img"><img alt="Recent post 1" src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-5.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 2" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-6.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 3" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-7.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 4" src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-8.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 5" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-1.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 6" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-2.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 7" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-3.jpg'"></div>
-                <div class="ring-img"><img alt="Recent post 8" src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=600&auto=format&fit=crop" loading="lazy" onerror="this.onerror=null;this.src='assets/ph-4.jpg'"></div>
-            </div>
-        </div>
-
-        <div class="text-center reveal" style="margin-top: clamp(40px,7vw,80px); position: relative; z-index: 5;">
-            <a href="https://www.instagram.com/musebyanahita/" target="_blank" rel="noopener"
-               class="btn-ghost inline-block px-10 py-4 text-[10px] tracking-[0.3em] uppercase">
-                View on Instagram
-            </a>
-        </div>
-    </section>
-
-    <!-- ============ FOOTER ============ -->
-    <footer class="relative py-14 md:py-20 px-6 text-center" style="background: radial-gradient(120% 100% at 50% 100%, rgba(129,11,56,0.18) 0%, transparent 60%), var(--bg); border-top: 1px solid var(--line);">
-        <div class="max-w-3xl mx-auto reveal">
-            <img src="assets/logo-white.png" alt="Muse by Anahita" class="mx-auto w-[120px] md:w-[150px] h-auto opacity-90 mb-8" draggable="false">
-            <div class="text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em]" style="color:var(--sand);">&copy; 2026 Muse by Anahita. All Rights Reserved.</div>
-        </div>
-    </footer>
-
-    <!-- ============ FLOATING CONTACT DOCK ============ -->
-    <div class="dock" id="dock" role="navigation" aria-label="Quick contact">
-        <a href="#book" class="dock-btn dock-primary" id="dockBook">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
-            <span class="label">Book Now</span>
-        </a>
-        <span class="dock-sep"></span>
-        <a href="https://wa.me/923314666585?text=Hello%20Muse%20by%20Anahita,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" class="dock-btn dock-ghost" aria-label="WhatsApp">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15c-1.48 0-2.93-.4-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
-            <span class="label">WhatsApp</span>
-        </a>
-        <div class="call-wrap">
-            <button type="button" class="dock-btn dock-ghost" id="callToggle" aria-haspopup="true" aria-expanded="false" aria-controls="callMenu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
-                <span class="label">Call</span>
-            </button>
-            <div class="call-menu" id="callMenu" role="menu" aria-label="Phone numbers">
-                <a href="tel:+923364446873" class="call-item" role="menuitem"><span class="k">Primary</span><span class="v">0336&ndash;4446873</span></a>
-                <a href="tel:+923314666585" class="call-item" role="menuitem"><span class="k">Secondary</span><span class="v">0331&ndash;4666585</span></a>
-                <a href="tel:+922135810615" class="call-item" role="menuitem"><span class="k">Landline</span><span class="v">021&ndash;35810615</span></a>
-            </div>
-        </div>
-        <span class="dock-sep"></span>
-        <a href="https://www.instagram.com/musebyanahita/" target="_blank" rel="noopener" class="dock-btn dock-ghost" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-            <span class="label">Instagram</span>
-        </a>
-    </div>
-
-    <!-- Carousel cursor follower (fine pointers only) -->
-    <div class="cursor"></div>
-    <div class="cursor cursor2"></div>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Google AI Studio App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/InertiaPlugin.min.js"></script>
+    <script type="module" crossorigin src="/assets/index-32kaEL2y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DcLXezIx.css">
+  </head>
+  <body>
+    <div id="root"></div>
     <script>
-    /* ============================================================
-       1. PRELOADER + HERO START
-       ============================================================ */
-    window.addEventListener('load', () => {
-        const pre = document.getElementById('preloader');
-        setTimeout(() => {
-            pre.classList.add('hidden');
-            document.body.classList.add('play');
-            document.getElementById('dock').classList.add('show');
-            startHero();
-        }, 1400);
-    });
+    (function() {
+      if (typeof gsap === 'undefined') {
+        console.error('GSAP not loaded');
+        return;
+      }
 
-    /* ============================================================
-       2. CINEMATIC VIDEO SEQUENCE  (1 -> 2 -> 3 -> 1, crossfade)
-          Uses the 'ended' event so timing is automatic, never hardcoded.
-       ============================================================ */
-    function startHero(){
-        const vids = Array.from(document.querySelectorAll('.hero-video'));
-        if (!vids.length) return;
+      if (typeof Draggable !== 'undefined') {
+        if (typeof InertiaPlugin !== 'undefined') {
+          gsap.registerPlugin(Draggable, InertiaPlugin);
+        } else {
+          gsap.registerPlugin(Draggable);
+        }
+      }
 
-        // SINGLE CLIP: just loop it smoothly, no sequencing/crossfade-to-black.
-        if (vids.length === 1) {
-            const v = vids[0];
-            v.loop = true; v.muted = true;
-            v.classList.add('active');
-            const p = v.play(); if (p && p.catch) p.catch(() => {});
-            document.addEventListener('visibilitychange', () => {
-                if (!document.hidden) { const pp = v.play(); if (pp && pp.catch) pp.catch(()=>{}); }
-            });
-            return;
+      let initialized = false;
+      let cleanupFn = null;
+
+      function tryInit() {
+        const carouselItemsEl = document.querySelector('.carousel-items');
+        const carouselContainerEl = document.querySelector('.carousel-container');
+
+        if (!carouselItemsEl || !carouselContainerEl) {
+          if (initialized) {
+            if (cleanupFn) cleanupFn();
+            cleanupFn = null;
+            initialized = false;
+          }
+          return;
         }
 
-        // MULTIPLE CLIPS: crossfade 1 -> 2 -> 3 -> 1 forever.
-        vids.forEach(v => { v.loop = false; v.muted = true; v.load(); });
+        if (initialized) return;
+        initialized = true;
 
-        let current = -1;
-        let watchdog = null;
+        const resetBtn = document.getElementById('resetBtn');
+        const circleBtn = document.getElementById('circleBtn');
+        const waveBtn = document.getElementById('waveBtn');
+        const staggerBtn = document.getElementById('staggerBtn');
+        const gridBtn = document.getElementById('gridBtn');
+        const fanBtn = document.getElementById('fanBtn');
+        const depthBtn = document.getElementById('depthBtn');
+        const allButtons = document.querySelectorAll('.switch-button');
 
-        function show(i){ vids.forEach((v, idx) => v.classList.toggle('active', idx === i)); }
+        const CONFIG = {
+          totalCards: 12,
+          wheelRadius: 35,
+          images: [
+            'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=800',
+            'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=800',
+            'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800',
+            'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800',
+            'https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800',
+            'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800',
+            'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800',
+            'https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?q=80&w=800',
+            'https://images.unsplash.com/photo-1519415943484-9fa1873496d4?q=80&w=800',
+            'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=800',
+            'https://images.unsplash.com/photo-1516727003284-a96541e51e9c?q=80&w=800',
+            'https://images.unsplash.com/photo-1548918901-9b31223c5c3a?q=80&w=800'
+          ],
+          animations: { transitionDuration: 1.2 }
+        };
 
-        function goTo(i){
-            const prev = current;
-            current = i;
-            const v = vids[i];
-            try { v.currentTime = 0; } catch(e){}
-            const p = v.play(); if (p && p.catch) p.catch(() => {});
-            show(i);
-            if (prev !== -1 && prev !== i) {
-                const pv = vids[prev];
-                setTimeout(() => { try { pv.pause(); } catch(e){} }, 1300);
-            }
-            armWatchdog();
+        let currentAnimation = 'circle';
+        let isTransitioning = false;
+        let activeAnimations = [];
+        let draggableInstance = null;
+        let originalZIndices = [];
+
+        gsap.set('.switch', { opacity: 0, visibility: 'hidden' });
+
+        function updateMenuState(a) {
+          allButtons.forEach(b => b.classList.remove('switch-button-current'));
+          const map = { circle:circleBtn, wave:waveBtn, stagger:staggerBtn, grid:gridBtn, fan:fanBtn, depth:depthBtn };
+          if (map[a]) map[a].classList.add('switch-button-current');
         }
 
-        function next(){ goTo((current + 1) % vids.length); }
-
-        function armWatchdog(){
-            clearTimeout(watchdog);
-            const v = vids[current];
-            const dur = (v && isFinite(v.duration) && v.duration > 0) ? v.duration : 12;
-            watchdog = setTimeout(() => { next(); }, (dur + 1) * 1000);
+        function generateCards() {
+          carouselItemsEl.innerHTML = '';
+          CONFIG.images.forEach((src, i) => {
+            const el = document.createElement('div');
+            el.className = 'carousel-item';
+            el.style.cssText = `
+              position: absolute;
+              width: 320px;
+              height: 460px;
+              border-radius: 8px;
+              overflow: hidden;
+              transform: translate(-50%, -50%);
+              transform-origin: center center;
+              user-select: none;
+              cursor: pointer;
+              background-size: cover;
+              background-position: center;
+              background-image: url(${src});
+              box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            `;
+            el.innerHTML = `<div style="position:absolute;top:10px;left:12px;font-size:13px;color:rgba(246,243,235,0.8);font-weight:600;font-family:'DM Sans',sans-serif;text-shadow:0 1px 3px rgba(0,0,0,0.8);">${String(i+1).padStart(3,'0')}</div>`;
+            carouselItemsEl.appendChild(el);
+          });
+          const cards = gsap.utils.toArray('.carousel-item');
+          originalZIndices = cards.map((card, i) => {
+            const z = 100 + (CONFIG.totalCards - i);
+            gsap.set(card, { zIndex: z });
+            return z;
+          });
         }
 
-        vids.forEach((v) => {
-            v.addEventListener('ended', () => { clearTimeout(watchdog); next(); });
-            v.addEventListener('error', () => { clearTimeout(watchdog); next(); });
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && current !== -1) {
-                const v = vids[current];
-                const p = v.play(); if (p && p.catch) p.catch(()=>{});
-            }
-        });
-
-        goTo(0);
-    }
-
-    /* ============================================================
-       3. SCROLL REVEAL
-       ============================================================ */
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    /* Compact top nav appears once you scroll past most of the hero */
-    (function scrollNav(){
-        const nav = document.getElementById('siteNav');
-        if (!nav) return;
-        function update(){
-            const trigger = window.innerHeight * 0.7;
-            nav.classList.toggle('show', window.scrollY > trigger);
-        }
-        update();
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-    })();
-
-    /* ============================================================
-       4. FLOATING LIGHT MOTES
-       ============================================================ */
-    (function motes(){
-        const field = document.getElementById('moteField');
-        if (!field || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const count = window.innerWidth < 768 ? 10 : 22;
-        for (let i = 0; i < count; i++){
-            const m = document.createElement('span');
-            m.className = 'mote';
-            const size = Math.random() * 5 + 2;
-            m.style.width = m.style.height = size + 'px';
-            m.style.left = Math.random() * 100 + '%';
-            m.style.bottom = '-10px';
-            m.style.setProperty('--sway', (Math.random() * 80 - 40) + 'px');
-            m.style.animationDuration = (Math.random() * 14 + 14) + 's';
-            m.style.animationDelay = (Math.random() * -20) + 's';
-            field.appendChild(m);
-        }
-    })();
-
-    /* ============================================================
-       5. MOUSE-REACTIVE PARALLAX (desktop / fine pointer only)
-       ============================================================ */
-    (function parallax(){
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(pointer: coarse)').matches) return;
-        const orbs = document.querySelectorAll('.orb');
-        let tx=0, ty=0, cx=0, cy=0;
-        window.addEventListener('mousemove', (e) => { tx = e.clientX/window.innerWidth - 0.5; ty = e.clientY/window.innerHeight - 0.5; });
-        (function loop(){
-            cx += (tx-cx)*0.05; cy += (ty-cy)*0.05;
-            orbs.forEach((o,i) => { const d=(i+1)*18; o.style.translate = (cx*d)+'px '+(cy*d)+'px'; });
-            requestAnimationFrame(loop);
-        })();
-    })();
-
-    /* ============================================================
-       6. ORGANIC MESH — flowing hair-strand light trails
-       ============================================================ */
-    (function mesh(){
-        const canvas = document.getElementById('mesh-canvas');
-        if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const ctx = canvas.getContext('2d');
-        let w, h, dpr, strands = [];
-        const COUNT = window.innerWidth < 768 ? 6 : 12;
-        function resize(){
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
-            w = canvas.clientWidth; h = canvas.clientHeight;
-            canvas.width = w*dpr; canvas.height = h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-        }
-        function makeStrand(){ return { x:Math.random()*w, y:Math.random()*h, len:60+Math.random()*120, amp:12+Math.random()*26, speed:0.0006+Math.random()*0.0012, phase:Math.random()*Math.PI*2, drift:(Math.random()-0.5)*0.15 }; }
-        function init(){ resize(); strands = Array.from({length:COUNT}, makeStrand); }
-        function draw(t){
-            ctx.clearRect(0,0,w,h);
-            strands.forEach(s => {
-                s.x += s.drift; if (s.x<-200) s.x=w+200; if (s.x>w+200) s.x=-200;
-                const g = ctx.createLinearGradient(s.x, s.y, s.x, s.y+s.len);
-                g.addColorStop(0,'rgba(216,185,139,0)'); g.addColorStop(0.5,'rgba(216,185,139,0.20)'); g.addColorStop(1,'rgba(201,164,160,0)');
-                ctx.strokeStyle = g; ctx.lineWidth = 1; ctx.beginPath();
-                for (let k=0;k<=s.len;k+=6){ const wave=Math.sin((t*s.speed)+s.phase+k*0.03)*s.amp*(k/s.len); const px=s.x+wave, py=s.y+k; k===0?ctx.moveTo(px,py):ctx.lineTo(px,py); }
-                ctx.stroke();
-            });
-            requestAnimationFrame(draw);
-        }
-        init(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
-    })();
-
-    /* ============================================================
-       7. CALL POPOVER (dock)
-       ============================================================ */
-    (function callMenu(){
-        const btn = document.getElementById('callToggle');
-        const menu = document.getElementById('callMenu');
-        if (!btn || !menu) return;
-        function close(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const open = menu.classList.toggle('open');
-            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-        document.addEventListener('click', (e) => { if (!menu.contains(e.target) && e.target !== btn) close(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
-    })();
-
-    /* ============================================================
-       8. CATALOGUE CAROUSEL — drag + wheel + tap
-          Adapted from supah's CodePen, scoped so the page still
-          scrolls normally and the wheel only drives the carousel
-          while the pointer is over it.
-       ============================================================ */
-    (function carousel(){
-        const root = document.getElementById('carousel');
-        if (!root) return;
-
-        let progress = 50;
-        let startX = 0;
-        let active = 0;
-        let isDown = false;
-        let hovering = false;
-
-        const speedWheel = 0.02;
-        const speedDrag = -0.1;
-
-        const $items = root.querySelectorAll('.carousel-item');
-        const $cursors = document.querySelectorAll('.cursor');
-
-        const getZindex = (array, index) =>
-            array.map((_, i) => (index === i ? array.length : array.length - Math.abs(index - i)));
-
-        function displayItems(item, index, active){
-            const zIndex = getZindex([...$items], active)[index];
-            item.style.setProperty('--zIndex', zIndex);
-            item.style.setProperty('--active', (index - active) / $items.length);
+        function killActive() {
+          gsap.killTweensOf('.carousel-items');
+          gsap.killTweensOf('.carousel-item');
+          activeAnimations.forEach(a => a && a.kill && a.kill());
+          activeAnimations = [];
         }
 
-        function animate(){
-            progress = Math.max(0, Math.min(progress, 100));
-            active = Math.floor(progress / 100 * ($items.length - 1));
-            $items.forEach((item, index) => displayItems(item, index, active));
-        }
-        animate();
+        function getVP() { return { width: window.innerWidth, height: window.innerHeight }; }
 
-        // Tap a card to bring it forward
-        $items.forEach((item, i) => {
-            item.addEventListener('click', () => {
-                progress = (i / $items.length) * 100 + 10;
-                animate();
-            });
-        });
-
-        // Track hover so wheel only hijacks scroll over the carousel
-        root.addEventListener('mouseenter', () => { hovering = true; });
-        root.addEventListener('mouseleave', () => { hovering = false; });
-
-        function handleWheel(e){
-            if (!hovering) return; // let the page scroll normally elsewhere
-            e.preventDefault();
-            progress += e.deltaY * speedWheel;
-            animate();
+        function circlePos(animated) {
+          const cards = gsap.utils.toArray('.carousel-item');
+          const r = Math.min(window.innerWidth, window.innerHeight) * (CONFIG.wheelRadius / 100);
+          const step = (2 * Math.PI) / CONFIG.totalCards;
+          const curRot = gsap.getProperty('.carousel-items', 'rotation') || 0;
+          const curRotRad = curRot * (Math.PI / 180);
+          const tl = gsap.timeline();
+          cards.forEach((card, i) => {
+            const angle = i * step + curRotRad;
+            const x = r * Math.cos(angle), y = r * Math.sin(angle);
+            if (animated) tl.to(card, { x, y, rotation: -curRot, scale: 0.8, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0);
+            else gsap.set(card, { x, y, rotation: -curRot, scale: 0.8 });
+          });
+          return tl;
         }
-        function handleMouseMove(e){
-            if (e.type === 'mousemove'){
-                $cursors.forEach(c => { c.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; });
-            }
-            if (!isDown) return;
-            const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-            progress += (x - startX) * speedDrag;
-            startX = x;
-            animate();
-        }
-        function handleMouseDown(e){
-            // only start a drag if the press began inside the carousel
-            if (!root.contains(e.target)) return;
-            isDown = true;
-            startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-        }
-        function handleMouseUp(){ isDown = false; }
 
-        document.addEventListener('wheel', handleWheel, { passive: false });
-        document.addEventListener('mousedown', handleMouseDown);
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        root.addEventListener('touchstart', handleMouseDown, { passive: true });
-        root.addEventListener('touchmove', handleMouseMove, { passive: true });
-        root.addEventListener('touchend', handleMouseUp);
+        function setupDraggable() {
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselItemsEl.classList.add('draggable');
+          draggableInstance = Draggable.create('.carousel-items', {
+            type: 'rotation', inertia: typeof InertiaPlugin !== 'undefined', throwResistance: 0.3,
+            onDrag: updateRots, onThrowUpdate: updateRots
+          })[0];
+        }
+
+        function updateRots() {
+          if (isTransitioning) return;
+          const wr = this.rotation || 0;
+          const cards = gsap.utils.toArray('.carousel-item');
+          if (currentAnimation === 'circle') cards.forEach(c => gsap.set(c, { rotation: -wr }));
+          else if (currentAnimation === 'fan') {
+            const vp = getVP(), maxA = Math.min(180, vp.width / 5);
+            cards.forEach((c, i) => { const p = i / (CONFIG.totalCards - 1); gsap.set(c, { rotation: (-maxA / 2) + p * maxA - wr }); });
+          }
+        }
+
+        function wavePos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const cw = 320;
+          const spacing = Math.min(vp.width * 0.8, CONFIG.totalCards * cw * 0.4) / (CONFIG.totalCards - 1);
+          const wh = Math.min(vp.height * 0.1, 80), tl = gsap.timeline();
+          cards.forEach((c, i) => tl.to(c, { x: (i - (CONFIG.totalCards - 1) / 2) * spacing, y: Math.sin((i / (CONFIG.totalCards - 1)) * Math.PI * 2) * wh, rotation: 0, scale: 0.7, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0));
+          return tl;
+        }
+
+        function startWave() {
+          const cards = gsap.utils.toArray('.carousel-item'), wh = Math.min(window.innerHeight * 0.1, 80);
+          return gsap.to(cards, { y: i => Math.sin((i / (CONFIG.totalCards - 1)) * Math.PI * 2 + Math.PI) * wh, duration: 1.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+        }
+
+        function staggerPos() {
+          const cards = gsap.utils.toArray('.carousel-item');
+          const cw = 320, ch = 460, cols = 4, rows = 3, xs = cw * 0.7, ys = ch * 0.7;
+          const tl = gsap.timeline();
+          cards.forEach((c, i) => { const row = Math.floor(i / cols), col = i % cols, xo = row % 2 === 1 ? xs / 2 : 0; tl.to(c, { x: (col - (cols - 1) / 2) * xs + xo, y: (row - (rows - 1) / 2) * ys, rotation: 0, scale: 0.7, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function staggerMouse() {
+          const vp = getVP(), cols = 4, xs = 320 * 0.7, ys = 460 * 0.7;
+          carouselContainerEl.onmousemove = e => {
+            if (currentAnimation !== 'stagger' || isTransitioning) return;
+            const off = (e.clientY / vp.height - 0.5) * -40;
+            gsap.utils.toArray('.carousel-item').forEach((c, i) => { const row = Math.floor(i / cols); gsap.to(c, { y: (row - 1) * ys + off, duration: 0.8, ease: 'power2.out' }); });
+          };
+        }
+
+        function gridPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const cw = 320, ch = 460, ratio = vp.width / vp.height;
+          const rows = ratio > 1 ? 3 : 4, cols = ratio > 1 ? 4 : 3;
+          const scale = Math.min(0.8, vp.width / (cols * cw * 1.2), vp.height / (rows * ch * 1.2));
+          const xs = cw * scale * 1.2, ys = ch * scale * 1.2, tl = gsap.timeline();
+          cards.forEach((c, i) => { const col = i % cols, row = Math.floor(i / cols); tl.to(c, { x: (col - (cols - 1) / 2) * xs, y: (row - (rows - 1) / 2) * ys, rotation: 0, scale, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function fanPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), maxA = Math.min(180, window.innerWidth / 5), tl = gsap.timeline();
+          cards.forEach((c, i) => { const p = i / (CONFIG.totalCards - 1); tl.to(c, { x: 0, y: Math.sin((p - 0.5) * Math.PI) * 50, rotation: (-maxA / 2) + p * maxA, scale: 0.8, duration: CONFIG.animations.transitionDuration, ease: 'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function depthPos() {
+          const cards = gsap.utils.toArray('.carousel-item'), vp = getVP();
+          const pos = [
+            {x:-vp.width*0.25,y:-vp.height*0.2,z:-200,scale:0.9,rotX:-5,rotY:5},
+            {x:vp.width*0.25,y:-vp.height*0.25,z:-300,scale:0.85,rotX:-3,rotY:-4},
+            {x:-vp.width*0.3,y:vp.height*0.2,z:-400,scale:0.8,rotX:4,rotY:6},
+            {x:vp.width*0.3,y:vp.height*0.25,z:-500,scale:0.75,rotX:5,rotY:-5},
+            {x:0,y:-vp.height*0.3,z:-700,scale:0.7,rotX:-6,rotY:0},
+            {x:-vp.width*0.35,y:0,z:-800,scale:0.65,rotX:0,rotY:7},
+            {x:vp.width*0.35,y:0,z:-900,scale:0.6,rotX:0,rotY:-7},
+            {x:0,y:vp.height*0.3,z:-1000,scale:0.55,rotX:6,rotY:0},
+            {x:-vp.width*0.2,y:-vp.height*0.15,z:-1200,scale:0.5,rotX:-3,rotY:3},
+            {x:vp.width*0.2,y:-vp.height*0.15,z:-1300,scale:0.45,rotX:-3,rotY:-3},
+            {x:-vp.width*0.2,y:vp.height*0.15,z:-1400,scale:0.4,rotX:3,rotY:3},
+            {x:vp.width*0.2,y:vp.height*0.15,z:-1500,scale:0.35,rotX:3,rotY:-3}
+          ];
+          const tl = gsap.timeline();
+          cards.forEach((c, i) => { if (i >= pos.length) return; const p = pos[i]; gsap.set(c, { zIndex: 1000 - Math.round(Math.abs(p.z)) }); tl.to(c, { x:p.x, y:p.y, z:p.z, rotationX:p.rotX, rotationY:p.rotY, scale:p.scale, duration:CONFIG.animations.transitionDuration, ease:'power2.inOut' }, 0); });
+          return tl;
+        }
+
+        function depthMouse() {
+          const vp = getVP();
+          carouselContainerEl.onmousemove = e => {
+            if (currentAnimation !== 'depth' || isTransitioning) return;
+            gsap.to('.carousel-items', { rotationY: (e.clientX / vp.width - 0.5) * 3, rotationX: -(e.clientY / vp.height - 0.5) * 3, duration: 1.2, ease: 'power1.out' });
+          };
+        }
+
+        function transitionTo(newPattern) {
+          if (isTransitioning) return;
+          isTransitioning = true;
+          updateMenuState(newPattern);
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselItemsEl.classList.remove('draggable');
+          carouselContainerEl.onmousemove = null;
+          const prev = currentAnimation;
+          currentAnimation = newPattern;
+          const tl = gsap.timeline({ onComplete: () => {
+            isTransitioning = false;
+            if (newPattern === 'circle' || newPattern === 'fan') setupDraggable();
+            else if (newPattern === 'wave') { const w = startWave(); activeAnimations.push(w); }
+            else if (newPattern === 'stagger') staggerMouse();
+            else if (newPattern === 'depth') depthMouse();
+          }});
+          activeAnimations.push(tl);
+          if (prev === 'fan') {
+            const nl = gsap.timeline();
+            gsap.utils.toArray('.carousel-item').forEach(c => nl.to(c, { rotation:0, rotationX:0, rotationY:0, duration:CONFIG.animations.transitionDuration/2, ease:'power2.inOut' }, 0));
+            tl.add(nl); tl.to({}, { duration:0.1 });
+          }
+          if (newPattern !== 'circle' && newPattern !== 'fan') {
+            if (prev === 'circle' || prev === 'fan') tl.set('.carousel-items', { rotationX:0, rotationY:0 });
+            else tl.set('.carousel-items', { rotation:0, rotationX:0, rotationY:0 });
+          }
+          const ptlMap = { circle: () => circlePos(true), wave: wavePos, stagger: staggerPos, grid: gridPos, fan: fanPos, depth: depthPos };
+          const ptl = ptlMap[newPattern]();
+          if (ptl) tl.add(ptl, 0);
+          if ((prev === 'circle' || prev === 'fan') && newPattern !== 'circle' && newPattern !== 'fan') {
+            tl.to('.carousel-items', { rotation:0, duration:CONFIG.animations.transitionDuration, ease:'power2.inOut' }, 0);
+          }
+        }
+
+        function initCarousel() {
+          const cards = gsap.utils.toArray('.carousel-item');
+          gsap.set(cards, { x:0, y:0, rotation:0, scale:0, opacity:0 });
+          gsap.set('.switch', { opacity:0, visibility:'hidden' });
+          const tl = gsap.timeline({ onComplete: () => {
+            isTransitioning = false;
+            setupDraggable();
+            gsap.to('.switch', { opacity:1, visibility:'visible', duration:0.8, ease:'power2.inOut' });
+          }});
+          cards.forEach((card, i) => {
+            gsap.set(card, { zIndex: 100 + (cards.length - 1 - i) });
+            tl.to(card, { opacity:1, scale:0.8, duration:0.5, ease:'power2.out' }, (cards.length - 1 - i) * 0.1);
+          });
+          tl.to({}, { duration:0.3 });
+          tl.add(circlePos(true));
+          currentAnimation = 'circle';
+          activeAnimations.push(tl);
+          updateMenuState('circle');
+        }
+
+        generateCards();
+        initCarousel();
+
+        const onResetClick = () => {
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselContainerEl.onmousemove = null;
+          gsap.set('.carousel-items', { rotation:0, rotationX:0, rotationY:0 });
+          gsap.to('.switch', { opacity:0, visibility:'hidden', duration:0.3, ease:'power2.inOut', onComplete: () => { generateCards(); initCarousel(); }});
+          currentAnimation = 'circle'; isTransitioning = false; updateMenuState('circle');
+        };
+        const onCircleClick = () => transitionTo('circle');
+        const onWaveClick = () => transitionTo('wave');
+        const onStaggerClick = () => transitionTo('stagger');
+        const onGridClick = () => transitionTo('grid');
+        const onFanClick = () => transitionTo('fan');
+        const onDepthClick = () => transitionTo('depth');
+        const onResize = () => { if (!isTransitioning) transitionTo(currentAnimation); };
+
+        if (resetBtn) resetBtn.addEventListener('click', onResetClick);
+        if (circleBtn) circleBtn.addEventListener('click', onCircleClick);
+        if (waveBtn) waveBtn.addEventListener('click', onWaveClick);
+        if (staggerBtn) staggerBtn.addEventListener('click', onStaggerClick);
+        if (gridBtn) gridBtn.addEventListener('click', onGridClick);
+        if (fanBtn) fanBtn.addEventListener('click', onFanClick);
+        if (depthBtn) depthBtn.addEventListener('click', onDepthClick);
+        window.addEventListener('resize', onResize);
+
+        cleanupFn = () => {
+          killActive();
+          if (draggableInstance) { draggableInstance.kill(); draggableInstance = null; }
+          carouselContainerEl.onmousemove = null;
+          window.removeEventListener('resize', onResize);
+          if (resetBtn) resetBtn.removeEventListener('click', onResetClick);
+          if (circleBtn) circleBtn.removeEventListener('click', onCircleClick);
+          if (waveBtn) waveBtn.removeEventListener('click', onWaveClick);
+          if (staggerBtn) staggerBtn.removeEventListener('click', onStaggerClick);
+          if (gridBtn) gridBtn.removeEventListener('click', onGridClick);
+          if (fanBtn) fanBtn.removeEventListener('click', onFanClick);
+          if (depthBtn) depthBtn.removeEventListener('click', onDepthClick);
+        };
+      }
+
+      setInterval(tryInit, 100);
     })();
     </script>
-</body>
+  </body>
 </html>
+
