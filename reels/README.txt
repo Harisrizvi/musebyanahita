@@ -23,3 +23,16 @@ Portrait images (9:16) look best. .webp, .png, or .webp all work
 
 Once they're here, run `npm run build` — the cards show them automatically.
 Until then, cards show an elegant branded placeholder.
+
+PLAYING REELS ON THE SITE (autoplay)
+====================================
+Instagram's embed often refuses to play reels inline (especially reels with
+licensed music) and sends people to the app instead. To have reels autoplay
+on the website, add the video files here and point each reel at its file:
+
+  reel1.mp4 ... reel7.mp4  (vertical 9:16, 720p, ideally under 3 MB each)
+
+then in src/reels.ts add  video: "/reels/reel1.mp4"  to that reel's line.
+Reels with a video autoplay muted (tap the speaker to unmute); the home
+carousel moves to the next reel when each clip ends. Reels without a video
+fall back to the Instagram embed.
