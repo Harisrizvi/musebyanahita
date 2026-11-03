@@ -27,7 +27,29 @@
         }
       })();
     </script>
-    
+
+    <!-- Hero first frames: start downloading frames 1-6 of the right set
+         (phone or desktop) while the page is still parsing. Home page only.
+         Must stay after the viewport meta so the width check is correct.
+         as="fetch" + crossorigin so CinematicHero's fetch() reuses these
+         responses instead of downloading the frames a second time. -->
+    <script>
+      (function () {
+        if (location.pathname !== '/' && location.pathname !== '/index.html') return;
+        var dir = window.matchMedia('(max-width: 767px)').matches ? 'mobile' : 'desktop';
+        for (var i = 1; i <= 6; i++) {
+          var l = document.createElement('link');
+          l.rel = 'preload';
+          l.as = 'fetch';
+          l.type = 'image/webp';
+          l.crossOrigin = 'anonymous';
+          l.setAttribute('fetchpriority', 'high');
+          l.href = '/hero-sequence-v4/' + dir + '/frame000' + i + '.webp';
+          document.head.appendChild(l);
+        }
+      })();
+    </script>
+
     <!-- Primary SEO Metadata -->
     <title>Manicure &amp; Pedicure in Clifton, Karachi | Muse by Anahita</title>
     <meta name="description" content="Essential, Signature, OPI, Aroma Spa and paraffin manicures and pedicures from Rs 2,000, with callus care for dry heels. Ladies-only salon in Clifton, Karachi." />
@@ -149,10 +171,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..700;1,400..700&family=DM+Sans:ital,wght@0,300..600;1,300..500&display=swap" />
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/thegoodmonolith" media="print" onload="this.media='all'" />
 
-    <script type="module" crossorigin src="/assets/index-DXSRc4FJ.js"></script>
+    <script type="module" crossorigin src="/assets/index-BYl2lCpd.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/motion-vendor-IbdPGbml.js">
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlaLOL-z.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-CXsA0dg1.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-FPU-V_rZ.css">
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Manicure & Pedicure","description":"Essential, signature, OPI, aroma spa and paraffin manicures and pedicures.","url":"https://musebyanahita.com/services/manicure-pedicure/","areaServed":{"@type":"City","name":"Karachi"},"provider":{"@id":"https://musebyanahita.com/#salon"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Manicure & Pedicure prices","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: Essential Manicure"},"price":"2000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: Signature Manicure"},"price":"3500","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: Solution Manicure"},"price":"4000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: Aroma Spa Manicure"},"price":"3000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: French Manicure"},"price":"2500","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: O.P.I Manicure"},"price":"3500","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Manicure: Paraffin Manicure"},"price":"2000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: Essential Pedicure"},"price":"2000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: Signature Pedicure"},"price":"3500","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: Solution Pedicure"},"price":"4000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: Aroma Spa Pedicure"},"price":"3000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: French Pedicure"},"price":"2100","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: O.P.I Pedicure"},"price":"4000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Pedicure: Paraffin Pedicure"},"price":"2200","priceCurrency":"PKR"}]}}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does a manicure and pedicure take?","acceptedAnswer":{"@type":"Answer","text":"Around 75 to 90 minutes for both, a little longer if you add gel colour or extra treatments."}},{"@type":"Question","name":"Are your tools sanitised?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tools are sanitised between every client, and we use disposable items wherever appropriate."}},{"@type":"Question","name":"How much is a manicure and pedicure?","acceptedAnswer":{"@type":"Answer","text":"The Essential Manicure and Essential Pedicure are Rs 2,000 each. Signature manicures and pedicures are Rs 3,500 each."}}]}</script>
   </head>
