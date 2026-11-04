@@ -1,0 +1,6 @@
+# Muse by Anahita — robots.txt
+User-agent: *
+Allow: /
+
+# Block nothing sensitive; this is a public marketing site.
+Sitemap: https://musebyanahita.com/sitemap.xml
