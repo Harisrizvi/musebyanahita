@@ -31,8 +31,8 @@
     <!-- Hero first frames: start downloading the first 6 shown frames of the right set
          (phone or desktop) while the page is still parsing. Home page only.
          Must stay after the viewport meta so the width check is correct.
-         as="fetch" + crossorigin so CinematicHero's fetch() reuses these
-         responses instead of downloading the frames a second time. -->
+         as="image" so CinematicHero's plain <img> frame requests reuse these
+         instead of downloading the frames a second time. -->
     <script>
       (function () {
         if (location.pathname !== '/' && location.pathname !== '/index.html') return;
@@ -42,9 +42,8 @@
         for (var i = first; i < first + 6; i++) {
           var l = document.createElement('link');
           l.rel = 'preload';
-          l.as = 'fetch';
+          l.as = 'image';
           l.type = 'image/webp';
-          l.crossOrigin = 'anonymous';
           l.setAttribute('fetchpriority', 'high');
           l.href = '/hero-sequence-v4/' + dir + '/frame' + ('000' + i).slice(-4) + '.webp';
           document.head.appendChild(l);
@@ -173,10 +172,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..700;1,400..700&family=DM+Sans:ital,wght@0,300..600;1,300..500&display=swap" />
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/thegoodmonolith" media="print" onload="this.media='all'" />
 
-    <script type="module" crossorigin src="/assets/index-RMvj3rbm.js"></script>
+    <script type="module" crossorigin src="/assets/index-Dm4ELFyV.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/motion-vendor-IbdPGbml.js">
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlaLOL-z.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-BqatKXPn.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-A6Gna2Up.css">
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Bridal Makeup","serviceType":"Bridal makeup","url":"https://musebyanahita.com/bridal/","areaServed":{"@type":"City","name":"Karachi"},"provider":{"@id":"https://musebyanahita.com/#salon"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Bridal makeup prices","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Nikkah / Engagement bridal makeup"},"price":"18000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Baraat bridal makeup"},"price":"25000","priceCurrency":"PKR"},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Walima bridal makeup"},"price":"25000","priceCurrency":"PKR"}]}}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much is bridal makeup?","acceptedAnswer":{"@type":"Answer","text":"Nikkah and engagement makeup is Rs 18,000, and baraat and walima makeup is Rs 25,000. If you would also like your hair styled, please ask when you book."}},{"@type":"Question","name":"How far in advance should I book?","acceptedAnswer":{"@type":"Answer","text":"As soon as your dates are confirmed. Six to eight weeks ahead is a good guide, and earlier for winter weddings, when weekends fill quickly."}},{"@type":"Question","name":"Can I have a trial?","acceptedAnswer":{"@type":"Answer","text":"Yes. Ask for a trial when you book. We usually schedule it a few weeks before the wedding, so there is time to adjust anything."}},{"@type":"Question","name":"Do you come to the venue or my home?","acceptedAnswer":{"@type":"Answer","text":"No. Bridal makeup is done at the salon. When you book, we'll tell you how long to allow so you leave for the venue on time."}},{"@type":"Question","name":"Will my makeup last the whole event?","acceptedAnswer":{"@type":"Answer","text":"That is exactly what bridal makeup is planned for. We prepare your skin, use long-wear products and set everything properly, so it holds through the photographs, the heat and a long evening."}}]}</script>
   </head>
