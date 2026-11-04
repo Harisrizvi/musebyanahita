@@ -38,8 +38,8 @@
         if (location.pathname !== '/' && location.pathname !== '/index.html') return;
         var mobile = window.matchMedia('(max-width: 767px)').matches;
         var dir = mobile ? 'mobile' : 'desktop';
-        var first = mobile ? 17 : 22, step = mobile ? 2 : 1; // same list as src/lib/heroPreloader.ts
-        for (var i = first; i < first + 6 * step; i += step) {
+        var first = mobile ? 17 : 22; // same list as src/lib/heroPreloader.ts (both start with every frame)
+        for (var i = first; i < first + 6; i++) {
           var l = document.createElement('link');
           l.rel = 'preload';
           l.as = 'image';
@@ -172,7 +172,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..700;1,400..700&family=DM+Sans:ital,wght@0,300..600;1,300..500&display=swap" />
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/thegoodmonolith" media="print" onload="this.media='all'" />
 
-    <script type="module" crossorigin src="/assets/index-BLmK70b-.js"></script>
+    <script type="module" crossorigin src="/assets/index-Cz-U4dJi.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/motion-vendor-IbdPGbml.js">
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlaLOL-z.js">
     <link rel="stylesheet" crossorigin href="/assets/index-dZvEHBqY.css">
