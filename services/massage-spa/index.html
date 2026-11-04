@@ -28,7 +28,7 @@
       })();
     </script>
 
-    <!-- Hero first frames: start downloading frames 1-6 of the right set
+    <!-- Hero first frames: start downloading the first 6 shown frames of the right set
          (phone or desktop) while the page is still parsing. Home page only.
          Must stay after the viewport meta so the width check is correct.
          as="fetch" + crossorigin so CinematicHero's fetch() reuses these
@@ -36,15 +36,17 @@
     <script>
       (function () {
         if (location.pathname !== '/' && location.pathname !== '/index.html') return;
-        var dir = window.matchMedia('(max-width: 767px)').matches ? 'mobile' : 'desktop';
-        for (var i = 1; i <= 6; i++) {
+        var mobile = window.matchMedia('(max-width: 767px)').matches;
+        var dir = mobile ? 'mobile' : 'desktop';
+        var first = mobile ? 17 : 22; // START_FRAME in CinematicHero: earlier frames are the same still
+        for (var i = first; i < first + 6; i++) {
           var l = document.createElement('link');
           l.rel = 'preload';
           l.as = 'fetch';
           l.type = 'image/webp';
           l.crossOrigin = 'anonymous';
           l.setAttribute('fetchpriority', 'high');
-          l.href = '/hero-sequence-v4/' + dir + '/frame000' + i + '.webp';
+          l.href = '/hero-sequence-v4/' + dir + '/frame' + ('000' + i).slice(-4) + '.webp';
           document.head.appendChild(l);
         }
       })();
